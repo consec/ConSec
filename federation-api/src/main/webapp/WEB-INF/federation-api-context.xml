@@ -1,0 +1,29 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+    <bean id="fileSystemPolicyRepository"
+          class="org.ow2.contrail.federation.herasafauthorizer.FileBasedPolicyRepository">
+        <constructor-arg value="/var/lib/contrail/federation-api/xacml-policy-repo"/>
+    </bean>
+
+    <bean id="inMemoryPolicyRepository" class="org.herasaf.xacml.core.simplePDP.MapBasedSimplePolicyRepository"/>
+
+    <bean id="herasafAuthorizer" class="org.ow2.contrail.federation.herasafauthorizer.HerasafXACMLAuthorizer">
+        <constructor-arg ref="inMemoryPolicyRepository"/>
+        <constructor-arg>
+            <list>
+                <value>/etc/contrail/federation-api/xacml-default-policy.xml</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="authorizer" class="org.ow2.contrail.federation.federationapi.authorization.HerasafAuthorizer">
+        <constructor-arg ref="herasafAuthorizer"/>
+    </bean>
+
+</beans>

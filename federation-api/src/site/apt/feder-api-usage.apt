@@ -1,0 +1,155 @@
+Usage of the Federation API
+
+  In this section we give you guidelines how to extend Federation API with additional 
+  functionality.
+
+* Extending classes
+
+  Collection of federation resources is realized from the interface <<<BaseCollection>>>.
+  
+  A specific entity from collection is realized from the interface <<<BaseSingle>>>.  
+
+* BaseCollection
+
+  On the figure bellow we provide class diagram for Attributes and ProfileTypes. 
+
+[images/BaseCollection.png] Class diagram for <<<Attributes>>> and <<<ProfileTypes>>> resources.
+
+  For example, in order to manipulate <<</attributes>>> resource HTTP POST should resemble to this
+  
+----
+curl -X POST --header "Content-Type: application/json" 
+-d '{name: "phone",uri: "contrail:user:attibute:phone",defaultValue: "", reference:"User",  description:"SomeDesc"}' 
+http://localhost:8080/attributes
+----
+
+  To provide additional functions for resource collections, extend interfaces 
+  from package <<<org.ow2.contrail.federation.federationapi.resources>>>. This way
+  source in the overriden functions <<<get>>> and <<<post>>> will be triggered.
+
+  In this example we provide internals of the <<<URoles>>> which can be referenced with 
+  HTTP methods on resource <<</roles>>>. See also annotation @Path.
+
+---------
+/**
+ * 
+ */
+package org.ow2.contrail.federation.federationapi.resources.impl;
+
+import ...
+...
+
+/**
+ * @author ales
+ *
+ */
+@Path("/roles")
+public class URolesResource implements IURolesResource {
+
+	protected static Logger logger =
+		Logger.getLogger(URolesResource.class);
+	
+	/* (non-Javadoc)
+	 * @see org.ow2.contrail.federation.federationapi.interfaces.BaseCollection#get()
+	 */
+	@Override
+	public Response get() throws Exception {
+		...
+	}
+
+	/* (non-Javadoc)
+	 * @see org.ow2.contrail.federation.federationapi.interfaces.BaseCollection#post(java.lang.String)
+	 */
+	@Override
+	public Response post(String content) throws Exception {
+		...
+	}
+
+	/* (non-Javadoc)
+	 * @see org.ow2.contrail.federation.federationapi.interfaces.BaseCollection#subResource(java.lang.String)
+	 */
+	@Override
+	public IURoleResource subResource(int id) throws Exception {
+		URole role = URoleDAO.findById(id);
+		if (role == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		else {
+			return new URoleResource(role);
+		}
+	}
+}
+
+---------
+
+  Provide code within each of the methods:
+  
+      * get() for triggering when <<<GET /roles>>> arrives
+       
+      * post() for triggering when <<<POST /roles >>> arrives
+
+  Function <<<subResource>>> is invoked when <<<GET /roles/{roleId}>>>.
+
+* BaseSingle
+
+[images/BaseSingle.png] Class diagram for subresource instance (e.g. specific role).
+
+  To provide additional functions for resource collections, extend classes 
+  from package <<<org.ow2.contrail.federation.federationapi.resources>>>. 
+  
+  An example of <<<URole>>> resource. Note, that <<<@Path>>> here is not 
+  provided, since it is already handeled by the interface <<<BaseSingle>>>
+  
+----
+/**
+ * 
+ */
+package org.ow2.contrail.federation.federationapi.resources.attributes;
+
+import ...
+...
+
+public class URoleResource implements IURoleResource {
+
+	protected static Logger logger =
+		Logger.getLogger(URoleResource.class);
+	
+	protected User user= null;
+	protected URole role = null;
+	
+	public URoleResource (User user, URole role){
+		this.user = user;
+		this.role = role;
+	}
+	
+	public URoleResource ( URole role){
+		this.user = null;
+		this.role = role;
+	}
+	
+		@Override
+	public ArrayList<String> getSubresources() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Response get() throws Exception {
+		...
+	}
+
+	@Override
+	public Response delete() throws Exception {
+		...
+	}
+
+	@Override
+	public Response put(String content) throws Exception {
+		...
+	}
+	
+----
+
+  Pay attention on function <<<getSubresources()>>>. This one returns strings of links
+  which are optionally provided by this resource. Links are appended to JSON object
+  returned in function <<<get()>>>.

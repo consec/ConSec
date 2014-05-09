@@ -1,0 +1,89 @@
+Examples for usage of federation identity database
+
+ Under <<<src/main/resources/user-db/example_db.sh>>> there is a script which can be used to fill 
+ the database with example values.
+ 
+ Generate user passwords:
+ 
+----
+JOHNPWD=`echo johnspwd | shasum`
+BOBPWD=`echo bobspwd | shasum`
+ALICEPWD=`echo alicespwd | shasum`
+----
+
+----
+HP=${HOST}:${PORT}
+----
+  
+  Inserting profiletypes.
+
+----
+curl -X POST --header "Content-Type: application/json" \
+-d '{"profileName": "FederationCoordinator","userProfileTypeDesc": "Cloud Administrator"}' \
+${HP}profiletypes
+curl -X POST --header "Content-Type: application/json" \
+-d '{"profileName": "FederationUser","userProfileTypeDesc": "Ordinary Cloud user"}' \
+${HP}profiletypes
+curl -X POST --header "Content-Type: application/json" \
+-d '{"profileName": "CloudAdministrator","userProfileTypeDesc": "Ordinary Cloud user"}' \
+${HP}profiletypes
+----
+
+  Inserting attributes.
+
+----
+curl -X POST --header "Content-Type: application/json" \
+-d '{"attributeName": "role", "attributeURI": "http://contrail.eu/role" , "defaultValue" : "user", "referenceTable": "UserProfile", "description": "User roles."}' ${HP}attributes
+curl -X POST --header "Content-Type: application/json" \
+-d '{"attributeName": "group","attributeURI": "http://contrail.eu/group" , "defaultValue" : "admins", "referenceTable": "UserProfile", "description": "User roles."}' ${HP}attributes
+curl -X POST --header "Content-Type: application/json" \
+-d '{"attributeName": "fname","attributeURI": "http://contrail.eu/fname" , "defaultValue" : "FirstName", "referenceTable": "UserProfile", "description": "Users first name"}' ${HP}attributes
+curl -X POST --header "Content-Type: application/json" \
+-d '{"attributeName": "lname","attributeURI": "http://contrail.eu/lname" , "defaultValue" : "LastName", "referenceTable": "UserProfile", "description": "Users last name"}' ${HP}attributes
+----
+
+  Inserting users.
+
+----
+curl -X POST --header "Content-Type: application/json" \
+-d "{username: john, password: ${JOHNPWD} , profileName: CloudAdministrator}" ${HP}users
+curl -X POST --header "Content-Type: application/json" \
+-d "{username: alice, password: ${ALICEPWD} , profileName: CloudAdministrator}" ${HP}users
+curl -X POST --header "Content-Type: application/json" \
+-d "{username: bob, password: ${BOBPWD} , profileName: CloudAdministrator}" ${HP}users
+----
+
+  Inserting user attributes.
+
+----
+echo "Bob\n"
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:bob,attributeName: role,value: programmer,idreference: bob}" ${HP}users/bob/attributes
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:bob,attributeName: group,value: newgroup,idreference: bob}" ${HP}users/bob/attributes
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:bob,attributeName: fname,value: Bob,idreference: bob}" ${HP}users/bob/attributes
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:bob,attributeName: lname,value: Brick,idreference: bob}" ${HP}users/bob/attributes
+
+echo "John\n"
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:john,attributeName: role,value: designer , idreference: john}" ${HP}users/john/attributes
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:john,attributeName: group,value: newgroup , idreference: john}" ${HP}users/john/attributes
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:john,attributeName: fname,value: John , idreference: john}" ${HP}users/john/attributes
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:john,attributeName: lname,value: Jelly , idreference: john}" ${HP}users/john/attributes
+
+echo "Alice\n"
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:alice,attributeName: role,value: designer , idreference: john}" ${HP}users/alice/attributes
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:alice,attributeName: group,value: newgroup , idreference: john}" ${HP}users/alice/attributes
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:alice,attributeName: fname,value: Alice , idreference: john}" ${HP}users/alice/attributes
+curl -X POST --header "Content-Type: application/json" \
+-d "{username:alice,attributeName: lname,value: Ali , idreference: john}" ${HP}users/alice/attributes
+----
+

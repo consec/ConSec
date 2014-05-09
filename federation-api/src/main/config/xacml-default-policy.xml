@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy
+        xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
+        PolicyId="default-policy"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+    <Description>
+        Default policy for the federation-api.
+    </Description>
+    <Target/>
+
+    <Rule RuleId="urn:contrail:rules:1" Effect="Permit">
+        <Description>
+            A user with role FederationUser has full access to his data (/users/userUUID and /users/userUUID/.*).
+        </Description>
+        <Target>
+            <Subjects>
+                <Subject>
+                    <SubjectMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">FederationUser
+                        </AttributeValue>
+                        <SubjectAttributeDesignator
+                                AttributeId="roleId"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </SubjectMatch>
+                </Subject>
+            </Subjects>
+            <Resources>
+                <Resource>
+                    <ResourceMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">^/users/.*</AttributeValue>
+                        <ResourceAttributeDesignator
+                                AttributeId="resourceUri"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </ResourceMatch>
+                </Resource>
+            </Resources>
+        </Target>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                <Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:string-concatenate">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">^/users/</AttributeValue>
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                        <SubjectAttributeDesignator AttributeId="userId"
+                                                    DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </Apply>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">($|/.+)</AttributeValue>
+                </Apply>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                    <ResourceAttributeDesignator AttributeId="resourceUri"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                </Apply>
+            </Apply>
+        </Condition>
+    </Rule>
+
+    <Rule RuleId="urn:contrail:rules:2" Effect="Permit">
+        <Description>
+            A user with role CloudAdministrator has full access to data of the cloud provider he belongs to
+            (/providers/ID and /providers/ID/.*).
+        </Description>
+        <Target>
+            <Subjects>
+                <Subject>
+                    <SubjectMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">CloudAdministrator
+                        </AttributeValue>
+                        <SubjectAttributeDesignator
+                                AttributeId="roleId"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </SubjectMatch>
+                </Subject>
+            </Subjects>
+            <Resources>
+                <Resource>
+                    <ResourceMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">^/providers/.*
+                        </AttributeValue>
+                        <ResourceAttributeDesignator
+                                AttributeId="resourceUri"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </ResourceMatch>
+                </Resource>
+            </Resources>
+        </Target>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                <Apply FunctionId="urn:oasis:names:tc:xacml:2.0:function:string-concatenate">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">^/providers/</AttributeValue>
+                    <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                        <SubjectAttributeDesignator
+                                AttributeId="providerId"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </Apply>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">($|/.+)</AttributeValue>
+                </Apply>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                    <ResourceAttributeDesignator AttributeId="resourceUri"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                </Apply>
+            </Apply>
+        </Condition>
+    </Rule>
+
+    <Rule RuleId="urn:contrail:rules:3" Effect="Permit">
+        <Description>
+            A user with role FederationCoordinator has full access to all users data (/users and /users/.*).
+        </Description>
+        <Target>
+            <Subjects>
+                <Subject>
+                    <SubjectMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">FederationCoordinator
+                        </AttributeValue>
+                        <SubjectAttributeDesignator
+                                AttributeId="roleId"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </SubjectMatch>
+                </Subject>
+            </Subjects>
+            <Resources>
+                <Resource>
+                    <ResourceMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">^/users($|/.+)
+                        </AttributeValue>
+                        <ResourceAttributeDesignator
+                                AttributeId="resourceUri"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </ResourceMatch>
+                </Resource>
+            </Resources>
+        </Target>
+    </Rule>
+
+    <Rule RuleId="urn:contrail:rules:4" Effect="Permit">
+        <Description>
+            A user with role FederationCoordinator has full access to providers list (/providers) and to individual
+            provider attributes (/providers/ID).
+        </Description>
+        <Target>
+            <Subjects>
+                <Subject>
+                    <SubjectMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">FederationCoordinator
+                        </AttributeValue>
+                        <SubjectAttributeDesignator
+                                AttributeId="roleId"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </SubjectMatch>
+                </Subject>
+            </Subjects>
+            <Resources>
+                <Resource>
+                    <ResourceMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">^/providers</AttributeValue>
+                        <ResourceAttributeDesignator
+                                AttributeId="resourceUri"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </ResourceMatch>
+                </Resource>
+                <Resource>
+                    <ResourceMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">^/providers/\w+$
+                        </AttributeValue>
+                        <ResourceAttributeDesignator
+                                AttributeId="resourceUri"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </ResourceMatch>
+                </Resource>
+            </Resources>
+        </Target>
+    </Rule>
+
+    <Rule RuleId="urn:contrail:rules:5" Effect="Permit">
+        <Description>
+            A user with role FederationCoordinator has full access to authorization rules.
+        </Description>
+        <Target>
+            <Subjects>
+                <Subject>
+                    <SubjectMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">FederationCoordinator
+                        </AttributeValue>
+                        <SubjectAttributeDesignator
+                                AttributeId="roleId"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </SubjectMatch>
+                </Subject>
+            </Subjects>
+            <Resources>
+                <Resource>
+                    <ResourceMatch
+                            MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">^/auth/.*</AttributeValue>
+                        <ResourceAttributeDesignator
+                                AttributeId="resourceUri"
+                                DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                    </ResourceMatch>
+                </Resource>
+            </Resources>
+        </Target>
+    </Rule>
+
+</Policy>

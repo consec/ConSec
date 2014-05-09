@@ -1,0 +1,123 @@
+				-------------------------------------------
+						Federation API
+				-------------------------------------------
+				damjan.murn@xlab.si, ales.cernivec@xlab.si
+				-------------------------------------------
+						2011-12-09
+
+
+Development
+
+  The easiest way to import the project into Eclipse is to use m2eclipse. 
+
+Database
+
+  At this point only users and their attributes can be managed with the use of the database.
+
+* Database installation (debian)
+
+--------------------------------------------------
+# apt-get install mysql-server
+--------------------------------------------------
+  
+  Allow access to a user <<<contrail>>> with password <<<contrail>>> 
+  to manipulate the database <<<contrail>>>:
+ 
+----------------------------------------------------
+$ mysql -u root -p 		// Note: your root account can be different
+
+mysql> CREATE USER 'contrail'@'localhost' IDENTIFIED BY 'contrail';
+mysql> GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON contrail.* TO 'contrail'@'localhost';
+----------------------------------------------------
+
+  You can do that also from the command line or bash script:
+
+----
+#!/bin/bash
+
+MYSQL=`which mysql`
+Q1="CREATE USER 'contrail'@'localhost' IDENTIFIED BY 'contrail';"
+Q2="SET PASSWORD FOR 'contrail'@'localhost' = PASSWORD('contrail');"
+Q3="GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP ON contrail.* TO 'contrail'@'localhost';"
+SQL="${Q1}${Q2}${Q3}"
+
+$MYSQL -u root < ${SCHEMA_PATH}
+$MYSQL -u root -e "$SQL"
+----     
+
+* Database schema
+
+  Database has been created with <<<MySQL Workbench>>>. 
+  Under the directory <<<src/main/resources/db>>> you can find file <<<Providers-db-schema.mwb>>> 
+  wich is <<<MySQL Workbench>>> file. <<<Providers-db.sql>>> is an SQL exported script   
+  which can be used to import the database scheme into the <<<mysql>>> database. Note: user account on 
+  your machine can differ to bellow:
+ 
+----------------------------------------------------- 
+$ mysql -u root -p < Providers-db.sql
+-----------------------------------------------------
+
+* Database configuration
+
+  Resides under <<<src/main/resources/persistence.xml>>>. There are several sections in the configuration file:
+  
+      * <<<javax.persistence.jdbc.url>>> describes listening port of the API server
+      
+      * <<<javax.persistence.jdbc.driver>>> defines which driver is used for the database
+                   
+      * <<<javax.persistence.jdbc.user>>> username of the database
+      
+      * <<<javax.persistence.jdbc.password>>> password of the database
+
+      []
+      
+  Here we provide an example of the configuration file.
+  
+-----
+...
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/contrail"/>
+            <property name="javax.persistence.jdbc.password" value="contrail"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="contrail"/>
+        </properties>
+...
+-----
+
+Compiling and building
+
+-------------
+$ mvn clean compile package
+-------------
+
+ Under <<<{$PWD}/target/federation-api.war>>> <<<war>>> file is created which should be 
+ copied under <<<webapps>>> directory of <<<tomcat>>> installation (e.g. <<</var/lib/tomcat6/webapps/>>> in Tomcat 6).
+ This way application is deployed as a servlet. 
+
+* Testing
+
+  For testing the API, <<<curl>>> can be used. In following subsections present examples how to test HTTP commands of each of the resource provided by the <<Federation API>>.
+  See section <<<src/main/resources/scripts/rest_example.sh>>> or examples section of this documentation to see some examples. 
+  
+Running unit tests
+
+----------
+$ mvn test
+---------- 
+
+  Currently there are five unit tests. 
+
+Generating documentation
+
+----------
+$ mvn site
+---------- 
+
+Deploying
+
+-------------
+$ mvn clean compile site package
+-------------
+
+ Creates <<<tar.gz>>> under <<<target>>> directory. It can be used to deploy the application to the 
+ new server. 

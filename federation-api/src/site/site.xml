@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Maven">
+  <bannerLeft>
+    <name>Maven</name>
+    <src>http://maven.apache.org/images/apache-maven-project.png</src>
+    <href>http://maven.apache.org/</href>
+  </bannerLeft>
+  <bannerRight>
+    <src>http://maven.apache.org/images/maven-small.gif</src>
+  </bannerRight>
+  <body>
+    <links>
+      <item name="Contrail" href="http://contrail-project.eu/" />    
+      <item name="Apache" href="http://www.apache.org/" />
+      <item name="Maven 2" href="http://maven.apache.org/"/>
+    </links>
+
+    <menu name="Federation API">
+      <item name="Introduction" href="index.html"/>
+      <item name="Deployment to Tomcat" href="tomcat-deployment.html"/>
+      <item name="Usage of Federation API" href="feder-api-usage.html"/>
+      <item name="Examples for inserting data" href="feder-db-examples.html"/>
+    </menu>
+
+    <menu ref="reports"/>
+  </body>
+</project>

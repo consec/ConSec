@@ -1,0 +1,150 @@
+				-------------------------------------------
+						Federation API: deployment to Tomcat
+				-------------------------------------------
+				damjan.murn@xlab.si
+				-------------------------------------------
+						2012-01-10
+
+
+Prerequisites
+
+  * Apache Tomcat >=6
+
+  * OpenSSL
+
+  * JDK 6
+
+  * curl
+
+Generating certificates
+
+* Certificate authority
+
+------------------------------------------------------------------------------------
+openssl genrsa -out ca.key 1024
+openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
+mkdir -p contrailCA/newcerts
+touch contrailCA/index.txt
+echo '01' > contrailCA/serial
+------------------------------------------------------------------------------------
+
+* Server certificate
+
+------------------------------------------------------------------------------------
+openssl genrsa -out server.key 2048
+openssl req -new -key server.key -out server.csr
+openssl ca -keyfile ca.key -cert ca.crt -out server.crt -infiles server.csr
+------------------------------------------------------------------------------------
+
+* Client certificate
+
+------------------------------------------------------------------------------------
+openssl genrsa -out client.key 2048
+openssl req -new -key client.key -out client.csr
+openssl ca -keyfile ca.key -cert ca.crt -out client.crt -infiles client.csr
+------------------------------------------------------------------------------------
+
+* Importing certificates into Java keystores
+
+  Truststore (used to validate client certificates):
+
+------------------------------------------------------------------------------------
+keytool -import -keystore cacerts.jks -storepass contrail -alias ca -file ca.crt
+------------------------------------------------------------------------------------
+
+  Keystore (server certificate):
+
+------------------------------------------------------------------------------------
+openssl pkcs12 -export -in server.crt -inkey server.key -out server.p12 -name server
+   -CAfile ca.crt -caname xlab-ca -chain
+keytool -importkeystore -deststorepass contrail -destkeypass contrail -destkeystore
+   server.jks -srckeystore server.p12 -srcstoretype PKCS12 -alias server
+------------------------------------------------------------------------------------
+
+  Copy both keystore files (cacerts.jks and server.jks) into Tomcat conf directory
+($CATALINA_BASE/conf/).
+
+Tomcat configuration
+
+  Configure the SSL connector in the $CATALINA_BASE/conf/server.xml file, where
+  $CATALINA_BASE represents the base directory for the Tomcat 6 instance:
+
+------------------------------------------------------------------------------------
+<Connector port="8443" protocol="org.apache.coyote.http11.Http11Protocol"
+		   SSLEnabled="true" maxThreads="150" scheme="https" secure="true"
+		   clientAuth="true" sslProtocol="TLS"
+		   keystoreFile="${catalina.base}/conf/server.jks"
+		   keystorePass="*********"
+		   truststoreFile="${catalina.base}/conf/cacerts.jks"
+		   truststorePass="*********" />
+------------------------------------------------------------------------------------
+
+  The <<clientAuth>> attribute is set to true so that Tomcat requires a valid certificate
+  chain from the client before accepting a connection. The <<keystoreFile>> attribute
+  contains a pathname of the key store file where the server certificate is stored.
+  If the key store contains more than one certificate the keyAlias should be specified
+  which determines which certificate to use. The <<truststoreFile>> attribute specifies
+  the trust store file containing the CA certificate chain to use to validate client
+  certificates.
+
+Deploying federation-api to Tomcat
+
+  Go to the project root directory and run following commands:
+
+------------------------------------------------------------------------------------
+mvn war:war
+cp target/federation-api.war $CATALINA_BASE/webapps
+------------------------------------------------------------------------------------
+
+  Tomcat will detect the new WAR file in webaps directory and automatically deploy it.
+
+Enabling/disabling non-secure (HTTP) access
+
+  To enable/disable non-secure (HTTP) access to the REST API (e.g. for testing purposes)
+  open the web.xml file in the $PROJECT_ROOT\src\main\webapp\WEB-INF directory and
+  configure the <<transport-guarantee>> attribute. The value <<CONFIDENTIAL>> specifies
+  that secured connection is required, value <<NONE>> allows also HTTP access.
+
+------------------------------------------------------------------------------------
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>REST services</web-resource-name>
+        <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+</security-constraint>
+------------------------------------------------------------------------------------
+
+Testing HTTPS access
+
+  To test if the HTTPS access to the federation-api has been configured correctly run the
+  following command:
+
+------------------------------------------------------------------------------------
+curl -X GET https://HOSTNAME:8443/federation-api/providers
+   --cacert ca.crt --cert client.crt --key client.key
+------------------------------------------------------------------------------------
+
+  ca.crt is the certificate of the CA that signed the server and client certificate.
+client.crt and client.key are the client certificate and private key in PEM format.
+If everything is correct you will receive a JSON response.
+
+  If server certificate is not trusted by the client (curl) you will receive
+following error:
+
+------------------------------------------------------------------------------------
+SSL certificate problem, verify that the CA cert is OK. Details:
+error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
+------------------------------------------------------------------------------------
+
+  If client certificate is not valid (i.e. not signed by the correct CA) you will receive
+following error:
+
+------------------------------------------------------------------------------------
+error:14094416:SSL routines:SSL3_READ_BYTES:sslv3 alert certificate unknown
+------------------------------------------------------------------------------------
+
+  If the client certificate holder is not authorized to access the requested resource
+you will receive HTTP status code 403 - Forbidden.
