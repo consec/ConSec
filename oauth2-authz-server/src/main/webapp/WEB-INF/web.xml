@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <display-name>Contrail OAuth Server</display-name>
+
+    <listener>
+        <listener-class>org.consec.oauth2.authzserver.MyServletContextListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>conf-file</param-name>
+        <param-value>/etc/contrail/contrail-oauth-as/oauth-as.properties</param-value>
+    </context-param>
+
+    <filter>
+        <description>This filter checks if client has authenticated with a client certificate.</description>
+        <filter-name>ClientCertAuthFilter</filter-name>
+        <filter-class>org.consec.oauth2.authzserver.utils.ClientCertAuthFilter</filter-class>
+        <init-param>
+            <param-name>test-mode</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+
+    <filter>
+        <description>Auditing</description>
+        <filter-name>Auditing</filter-name>
+        <filter-class>org.ow2.contrail.resource.auditing.WebAppAuditingFilter</filter-class>
+        <init-param>
+            <param-name>configuration-file</param-name>
+            <param-value>/etc/contrail/contrail-oauth-as/oauth-as.properties</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>Auditing</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>oauth-rest-api</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>org.consec.oauth2.authzserver.endpoints</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>oauth-rest-api</servlet-name>
+        <url-pattern>/r/*</url-pattern>
+    </servlet-mapping>
+    <filter-mapping>
+        <filter-name>ClientCertAuthFilter</filter-name>
+        <servlet-name>oauth-rest-api</servlet-name>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>admin-rest-api</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>org.consec.oauth2.authzserver.adminapi</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>admin-rest-api</servlet-name>
+        <url-pattern>/admin/*</url-pattern>
+    </servlet-mapping>
+    <filter-mapping>
+        <filter-name>ClientCertAuthFilter</filter-name>
+        <servlet-name>admin-rest-api</servlet-name>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>authorize-servlet</servlet-name>
+        <servlet-class>
+            org.consec.oauth2.authzserver.endpoints.AuthzEndpoint
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>authorize-servlet</servlet-name>
+        <url-pattern>/authorize</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>saml-acs-servlet</servlet-name>
+        <servlet-class>
+            org.consec.oauth2.authzserver.saml.servlets.AcsServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>saml-acs-servlet</servlet-name>
+        <url-pattern>/acs</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>saml-slo-servlet</servlet-name>
+        <servlet-class>
+            org.consec.oauth2.authzserver.saml.servlets.SloServlet
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>saml-slo-servlet</servlet-name>
+        <url-pattern>/slo</url-pattern>
+    </servlet-mapping>
+</web-app>

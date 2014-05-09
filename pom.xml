@@ -8,6 +8,7 @@
   <name>ConSec builder</name>
 
   <modules>
+    <module>parent-pom</module>
     <module>federation-api</module>
     <module>federation-db</module>
   </modules>

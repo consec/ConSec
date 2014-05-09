@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+    <persistence-unit name="AuthzServerPersistenceUnit">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>org.consec.oauth2.authzserver.jpa.entities.AccessToken</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.AuthzCode</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.Client</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.ClientTrust</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.ClientTrustPK</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.Country</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.CountryTrust</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.CountryTrustPK</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.Organization</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.OrganizationTrust</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.OrganizationTrustPK</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.TokenInfoAccessLog</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.Owner</class>
+
+        <properties>
+            <property name="eclipselink.cache.shared.default" value="false"/>
+            <property name="eclipselink.target-database" value="MySQL"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/contrail_oauth_as"/>
+            <property name="javax.persistence.jdbc.user" value="contrail"/>
+            <property name="javax.persistence.jdbc.password" value="contrail"/>
+
+            <!-- <property name="eclipselink.ddl-generation" value="create-tables"/> -->
+        </properties>
+    </persistence-unit>
+</persistence>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+    <persistence-unit name="testPersistenceUnit">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>org.consec.oauth2.authzserver.jpa.entities.AccessToken</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.AuthzCode</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.Client</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.ClientTrust</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.ClientTrustPK</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.Country</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.CountryTrust</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.CountryTrustPK</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.Organization</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.OrganizationTrust</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.OrganizationTrustPK</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.TokenInfoAccessLog</class>
+        <class>org.consec.oauth2.authzserver.jpa.entities.Owner</class>
+
+        <properties>
+            <property name="eclipselink.target-database" value="Derby"/>
+            <property name="eclipselink.ddl-generation" value="create-tables"/>
+            <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:derby:memory:testDB;create=true"/>
+            <property name="javax.persistence.jdbc.user" value="contrail"/>
+            <property name="javax.persistence.jdbc.password" value="contrail"/>
+        </properties>
+    </persistence-unit>
+</persistence>
