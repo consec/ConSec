@@ -14,7 +14,7 @@
         <groupId>org.consec</groupId>
         <artifactId>consec</artifactId>
         <version>0.1-SNAPSHOT</version>
-        <relativePath>../parent-pom</relativePath>
+        <relativePath>../../parent-pom</relativePath>
     </parent>
 
     <dependencies>

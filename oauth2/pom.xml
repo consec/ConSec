@@ -9,6 +9,6 @@
 
   <modules>
     <module>oauth2-java-client</module>
-    <module></module>
+    <module>oauth2-authz-server</module>
   </modules>
 </project>
