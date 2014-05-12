@@ -1,0 +1,19 @@
+Simple Python OAuth2 Client
+==========================
+ales.cernivec@xlab.si
+
+Installation
+------------
+# pip install -r requirements.txt
+
+Running
+-------
+$ python oauth_client/oauth_client.py
+
+Navigate to <host>:<port> with your browser.
+
+See oauth_client.log when executing the client. You should obtain access_token.
+
+Configuration
+-------------
+See/edit oauth_client.cfg
