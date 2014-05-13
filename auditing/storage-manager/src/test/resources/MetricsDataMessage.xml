@@ -1,0 +1,9 @@
+<Message sid="n0014-xc1-xlab-lan" time="2012-03-05T08:13:39+0100">
+  <Value id="cores">2</Value>
+  <Value id="speed">3058.887</Value>
+  <Value id="user">0.94</Value>
+  <Value id="system">1.12</Value>
+  <Value id="idle">97.45</Value>
+  <Value id="load_one">0.66</Value>
+  <Value id="load_five">0.17</Value>
+</Message>

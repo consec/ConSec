@@ -8,13 +8,6 @@
     <version>0.1-SNAPSHOT</version>
     <name>ConSec OAuth2 Demo Builder</name>
 
-    <parent>
-        <groupId>org.consec</groupId>
-        <artifactId>consec</artifactId>
-        <version>0.1-SNAPSHOT</version>
-        <relativePath>../../parent-pom</relativePath>
-    </parent>
-	
 	<modules>
 		<module>authorization-flow</module>
 		<module>client-cred-flow</module>
