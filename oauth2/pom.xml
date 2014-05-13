@@ -5,11 +5,11 @@
   <artifactId>builder</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>ConSec OAuth2 builder</name>
+  <name>ConSec OAuth2 Builder</name>
 
   <modules>
     <module>oauth2-java-client</module>
     <module>oauth2-authz-server</module>
-	<module>oauth2-python-client</module>
+	<module>oauth2-demo</module>
   </modules>
 </project>
