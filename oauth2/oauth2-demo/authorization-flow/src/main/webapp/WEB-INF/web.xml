@@ -1,0 +1,29 @@
+<!DOCTYPE web-app PUBLIC
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+    <display-name>OAuth2 Authorization Flow Demo</display-name>
+
+    <context-param>
+        <param-name>configuration-file</param-name>
+        <param-value>/etc/contrail/oauth2-authorization-flow-demo/oauth2-authorization-flow-demo.conf</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.ow2.contrail.common.oauth.demo.MyServletContextListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>oauth2callback-servlet</servlet-name>
+        <servlet-class>
+            org.ow2.contrail.common.oauth.demo.OAuth2CallbackEndpoint
+        </servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>oauth2callback-servlet</servlet-name>
+        <url-pattern>/oauth2callback</url-pattern>
+    </servlet-mapping>
+
+</web-app>
