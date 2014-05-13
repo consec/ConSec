@@ -1,0 +1,35 @@
+#!/bin/bash
+
+if [ `id -u` -ne 0 ]; then
+	echo You need to be root to run this command
+	exit 1
+fi
+
+if [ $# -ne 3 ] && [ $# -ne 4 ] ; then
+	echo 'Usage: add-trusted-ca truststore CAcert alias [storepass]'
+	exit 1
+fi
+
+catrust=$1
+cacert=$2
+alias=$3
+storepass=$4
+
+
+if [ -z ${storepass} ]; then 
+	stty -echo
+	read -p "Enter store password:" storepass; echo
+	stty echo
+	storepass="-storepass ${storepass}"
+else
+	storepass="-storepass ${4}"
+fi
+tcuser=$(awk -F: ' /^tomcat[67]/ { print $1; exit 0 }' /etc/passwd)
+tcgroup=${tcuser}
+
+
+keytool -import -file  ${cacert} -keystore ${catrust} -storetype JKS  -alias ${alias} -noprompt  ${storepass}
+
+chown ${tcuser}.${tcgroup} ${catrust}
+
+exit $?

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+    <display-name>Contrail Certificate Authority</display-name>
+
+
+    <!--
+
+    Declaration of UserCertServlet
+
+    -->
+
+    <servlet>
+        <servlet-name>UserCertServlet</servlet-name>
+        <servlet-class>eu.contrail.security.UserCertServlet</servlet-class>
+        <!--
+        TODO: Move most of these parameters to a properties files which will not
+        be overwritten when the CA Server WAR is deployed.
+
+        -->
+        <init-param>
+            <description>Enable debugging output</description>
+            <param-name>debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <description>Location of CA keypair</description>
+            <param-name>issuerKeyPairFilename</param-name>
+            <param-value>/var/lib/contrail/ca-server/testca-key.pem</param-value>
+        </init-param>
+        <!-- TODO: Remove any reference to this init-parameter, as we don't encourage passphrases on service keys -->
+        <init-param>
+            <description>Password for CA keypair</description>
+            <param-name>issuerKeyPairPassword</param-name>
+            <param-value></param-value>
+        </init-param>
+        <init-param>
+            <description>Location of CA certificate</description>
+            <param-name>issuerCertificateFilename</param-name>
+            <param-value>/var/lib/contrail/ca-server/testca-cert.pem</param-value>
+        </init-param>
+        <init-param>
+            <description>Certificate lifetime in hours. -1 to not use</description>
+            <param-name>certLifetimeHours</param-name>
+            <param-value>6</param-value>
+        </init-param>
+        <init-param>
+            <description>Certificate lifeime in days. -1 to not use</description>
+            <param-name>certLifetimeDays</param-name>
+            <param-value>-1</param-value>
+        </init-param>
+    </servlet>
+
+    <!--
+
+    Declaration of HostCertServlet
+
+    -->
+
+    <servlet>
+        <description>Generate a host certificate. Authenticate with client SSL certificate</description>
+        <servlet-name>HostCertServlet</servlet-name>
+        <servlet-class>eu.contrail.security.HostCertServlet</servlet-class>
+        <init-param>
+            <description>Enable debugging output</description>
+            <param-name>debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <description>Location of CA keypair</description>
+            <param-name>issuerKeyPairFilename</param-name>
+            <param-value>/var/lib/contrail/ca-server/rootca-key.pem</param-value>
+        </init-param>
+        <init-param>
+            <description>Password for CA keypair</description>
+            <param-name>issuerKeyPairPassword</param-name>
+            <param-value>changeme</param-value>
+        </init-param>
+        <init-param>
+            <description>Location of CA certificate</description>
+            <param-name>issuerCertificateFilename</param-name>
+            <param-value>/var/lib/contrail/ca-server/rootca-cert.pem</param-value>
+        </init-param>
+        <init-param>
+            <description>CNs to trust - if not set, or empty, trust any client</description>
+            <param-name>allowedCNs</param-name>
+            <param-value/>
+        </init-param>
+        <init-param>
+            <description>Certificate lifetime in hours</description>
+            <param-name>certLifetimeHours</param-name>
+            <param-value>0</param-value>
+        </init-param>
+        <init-param>
+            <description>Certificate lifeime in days</description>
+            <param-name>certLifetimeDays</param-name>
+            <param-value>730</param-value>
+        </init-param>
+    </servlet>
+
+
+    <!--
+
+    Declaration of DelegatedHostCertServlet
+
+    -->
+
+    <servlet>
+        <description>Generate a host certificate. Authenticate with client SSL certificate</description>
+        <servlet-name>DelegatedHostCertServlet</servlet-name>
+        <servlet-class>eu.contrail.security.DelegatedHostCertServlet</servlet-class>
+        <init-param>
+            <description>Enable debugging output</description>
+            <param-name>debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <description>Location of CA keypair</description>
+            <param-name>issuerKeyPairFilename</param-name>
+            <param-value>/var/lib/contrail/ca-server/rootca-key.pem</param-value>
+        </init-param>
+        <init-param>
+            <description>Password for CA keypair</description>
+            <param-name>issuerKeyPairPassword</param-name>
+            <param-value>changeme</param-value>
+        </init-param>
+        <init-param>
+            <description>Location of CA certificate</description>
+            <param-name>issuerCertificateFilename</param-name>
+            <param-value>/var/lib/contrail/ca-server/rootca-cert.pem</param-value>
+        </init-param>
+        <init-param>
+            <description>CNs to trust - if not set, or empty, trust any client</description>
+            <param-name>allowedCNs</param-name>
+            <param-value/>
+        </init-param>
+        <init-param>
+            <description>Certificate lifetime in hours</description>
+            <param-name>certLifetimeHours</param-name>
+            <param-value>36</param-value>
+        </init-param>
+        <init-param>
+            <description>Certificate lifeime in days</description>
+            <param-name>certLifetimeDays</param-name>
+            <param-value>-1</param-value>
+        </init-param>
+    </servlet>
+
+
+    <!--
+
+    Declaration of UserCertServlet
+
+    Servlet to create a deleagted certificates for a user
+
+    -->
+
+    <servlet>
+        <servlet-name>DelegatedUserCertServlet</servlet-name>
+        <servlet-class>eu.contrail.security.DelegatedUserCertServlet</servlet-class>
+        <!--
+
+        TODO: Move most of these parameters to a properties files which will not
+        be overwritten when the CA Server WAR is deployed.
+
+        -->
+        <init-param>
+            <description>Enable debugging output</description>
+            <param-name>debug</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <description>CNs to trust - if not set, or empty, trust any client</description>
+            <param-name>allowedCNs</param-name>
+            <param-value/>
+        </init-param>
+        <init-param>
+            <description>Location of CA keypair</description>
+            <param-name>issuerKeyPairFilename</param-name>
+            <param-value>src/test/resources/rootca-key.pem</param-value>
+        </init-param>
+        <init-param>
+            <param-name>issuerKeyPairPassword</param-name>
+            <param-value>changeme</param-value>
+            <!--
+            <description>Password for CA keypair</description>     
+            -->
+        </init-param>
+        <init-param>
+            <description>Location of CA certificate</description>
+            <param-name>issuerCertificateFilename</param-name>
+            <param-value>src/test/resources/rootca-cert.pem</param-value>
+        </init-param>
+        <init-param>
+            <description>Certificate lifetime in hours</description>
+            <param-name>certLifetimeHours</param-name>
+            <param-value>6</param-value>
+        </init-param>
+        <init-param>
+            <description>Certificate lifeime in days</description>
+            <param-name>certLifetimeDays</param-name>
+            <param-value>-1</param-value>
+        </init-param>
+        <!--
+        With servlet 2.4, location of this subelement is important
+        -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!--    
+
+  Declare the filter and the filter-mapping
+
+    -->
+    <filter>
+        <description>Test that AuthorizationHeader is present and contains a valid (username, password) pair
+        </description>
+        <filter-name>BasicAuthFilter</filter-name>
+        <filter-class>eu.contrail.security.BasicAuthFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>BasicAuthFilter</filter-name>
+        <servlet-name>UserCertServlet</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+
+    <filter-mapping>
+        <filter-name>BasicAuthFilter</filter-name>
+        <servlet-name>HostCertServlet</servlet-name>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <!--
+
+    TODO: Check whether the following login-config and security-constraints sections are
+    necessary and correct.
+
+    -->
+    <!--
+    <login-config>
+      <auth-method>BASIC</auth-method>
+      <realm-name>BASIC</realm-name>
+    </login-config>
+
+   -->
+    <!--
+    
+  Without the following, the HttpUnit ServletRunner cannot retrieve the BasicAuth header
+  
+  (But, for some reason, we do see logging output from the servlet, which we don't normally...)
+    
+  -->
+    <!--
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>User Cert Servlet</web-resource-name>
+      <url-pattern>/user</url-pattern>
+    </web-resource-collection>
+  </security-constraint>
+  
+  -->
+
+    <servlet-mapping>
+        <servlet-name>UserCertServlet</servlet-name>
+        <url-pattern>/user</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DelegatedUserCertServlet</servlet-name>
+        <url-pattern>/delegateduser</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>HostCertServlet</servlet-name>
+        <url-pattern>/host</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DelegatedHostCertServlet</servlet-name>
+        <url-pattern>/delegatedhost</url-pattern>
+    </servlet-mapping>
+
+</web-app>

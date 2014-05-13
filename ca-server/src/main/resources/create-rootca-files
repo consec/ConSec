@@ -1,0 +1,119 @@
+#!/bin/sh
+#
+# create-rootca-creds: Create the private key and
+# public key certificate for the Contrail Root CA
+#
+# Author: Ian Johnson, STFC Rutherford Appleton Laboratory. 19/06/12.
+#
+
+
+#test $# -ne 0 && echo "Usage: $0 CAdir" &&  exit 1 
+
+if [ `id -u` -ne 0 ]; then
+	echo "You need root privileges to run this script"
+	exit 1
+fi
+
+if [ $# -ne 1 ]; then
+	echo "Usage:" $(basename $0) "Subject DN (Subject DN in the form /DC=region/DC=project/DC=ca)"
+	exit 1
+fi
+
+export CADIR=/var/lib/contrail/ca-server
+
+#
+# Configuration directory  
+#
+
+confdir=/etc/contrail/ca-server
+
+OPENSSL_CONF=${confdir}/create-rootca-files.conf
+#test ! -r ${OPENSSL_CONF} && echo "Can't read ${OPENSSL_CONF}" && exit 1 
+
+#
+# Only allow owner to read the private key
+#
+
+#
+# TODO: Change owner to 'tomcatN' first
+#
+tcuser=$(awk -F: ' /^tomcat[67]/ { print $1; exit 0 }' /etc/passwd)
+tcgroup=${tcuser}
+
+#
+# Turn off all permissions for group and other users
+#
+
+umask 077
+
+#
+# We are using 'openssl req' with the '-x509' flag to create a self-signed certificate.
+# Need to specify duration -days on command line as it is not picked up from conf file
+# We use filesystem permissions to protect private keys
+#
+
+cacert=${CADIR}/rootca-cert.pem
+cakey=${CADIR}/rootca-key.pem
+catrust=${CADIR}/ts.jks
+
+lifetime=1825
+keylen=2048
+
+duration="-days ${lifetime}"
+
+
+digest="-sha1"
+
+rootSubject=$1
+
+openssl req -x509 ${digest} -subj ${rootSubject} -newkey rsa:${keylen} -nodes ${duration} \
+-keyout ${cakey} -out  ${cacert} -outform PEM -config ${OPENSSL_CONF} -extensions root_ca_extensions >/dev/null  
+
+status=$?
+
+if [ ${status} -eq 0 ]; then
+
+	chown ${tcuser}.${tcgroup} ${cacert} ${cakey}
+	chmod go+r ${cacert}
+
+	enddate=$(openssl x509 -enddate -noout -in ${cacert} | sed -e 's/notAfter=//')
+
+	echo "Root CA Private key written to ${cakey} - keep this private key secure"
+	echo "Root CA Public key certificate written to ${cacert} (valid until ${enddate})."
+
+
+	if [ -f ${catrust} ]; then 
+ 		  echo "Backing up ${catrust}.bak"
+      mv ${catrust} ${catrust}.bak
+	fi
+
+	alias="rootca"
+	tspass="tomcat"
+
+	add-trusted-ca ${catrust} ${cacert} ${alias} ${tspass}  
+	
+	status=$?
+
+	if [ ${status} -eq 0 ]; then
+
+		chown ${tcuser}.${tcgroup} ${catrust}
+		chmod go+r ${catrust}
+
+		echo "CA Server truststore created in ${catrust} with entry alias ${alias}, keystore password ${tspass}"
+
+#		keytool -list -keystore ${catrust} -storepass ${tspass}
+
+	else
+
+		echo "Problem creating ${catrust}"
+		exit ${status}
+
+	fi
+else 
+
+	echo "Creation of Root CA private key and public key certificate failed."
+	echo "Please check any OpenSSL error messages for the cause."
+
+	exit ${status}
+
+fi
