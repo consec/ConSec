@@ -1,0 +1,68 @@
+Simple Authorization settings for Federation Identity Database
+
+ Here is listing of <<<web.xml>>> where two important parameters can be set
+ in order to use simple authorization settings (provided by the access file containing 
+ allowed CNs). 
+ 
+-----------
+<web-app>
+
+	<context-param>
+		<param-name>authz-file</param-name>
+		<param-value>authz-file.txt</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>authz-enabled</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<display-name>Contrail Federation Identity Database Web Application</display-name>
+	<listener>
+		<listener-class>org.ow2.contrail.federation.federationapi.MyServletContextListener</listener-class>
+	</listener>
+	<servlet>
+		...
+		<init-param>
+			<param-name>authz-file</param-name>
+			<param-value>authz-file.txt</param-value>
+		</init-param>
+		<init-param>
+			<param-name>authz-enabled</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		...
+	</servlet>
+
+</web-app>
+-----------
+
+Enable/Disable simple authorization
+ 
+ In order to enable/disable simple authorization change the value of the <<<authz-enabled>>> parameter of <<<web.xml>>>
+ to <<<true>>> or <<<false>>>.
+ 
+----
+<init-param>
+	<param-name>authz-enabled</param-name>
+	<param-value>true</param-value>
+</init-param>
+----
+
+ When simple authorization is enabled <<<authz-file>>> define CNs which are allowed to access resources 
+ provided by the <<<federation-id-prov>>>.
+ 
+----
+<init-param>
+	<param-name>authz-file</param-name>
+	<param-value>authz-file.txt</param-value>
+</init-param>
+---- 
+ 
+ File <<<authz-file.txt>>> resides under <<<WEB-INF>>> directory. The content should be list of CNs, each CN in its own
+ line:
+ 
+----
+allowed_cn1
+allowed_cn2
+----

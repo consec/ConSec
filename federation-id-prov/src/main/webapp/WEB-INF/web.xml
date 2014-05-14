@@ -1,0 +1,48 @@
+<!DOCTYPE web-app PUBLIC
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+    <context-param>
+        <param-name>properties-file</param-name>
+        <param-value>/etc/contrail/federation-id-prov/federation-id-prov.conf</param-value>
+    </context-param>
+
+    <display-name>Contrail Federation Identity Database Web Application</display-name>
+    <listener>
+        <listener-class>org.ow2.contrail.federation.federationapi.MyServletContextListener</listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>federation-id-prov</servlet-name>
+        <servlet-class>
+            com.sun.jersey.spi.container.servlet.ServletContainer
+        </servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>
+                org.ow2.contrail.federation.federationapi.resources.impl
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>properties-file</param-name>
+            <param-value>/etc/contrail/federation-id-prov/federation-id-prov.conf</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>federation-id-prov</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>federation-id-prov</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
+</web-app>

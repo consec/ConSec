@@ -1,0 +1,341 @@
+				-------------------------------------------
+						Federation Identity Database: deployment to Tomcat
+				-------------------------------------------
+				damjan.murn@xlab.si, ales.cernivec@xlab.si
+				-------------------------------------------
+						2012-01-10
+
+
+Prerequisites
+
+  * Apache Tomcat 6 or 7
+
+  * OpenSSL
+
+  * JDK 6
+
+  * curl
+
+Generating certificates
+
+* OpenSSL version
+
+ Tested on
+ 
+----
+$ openssl version
+OpenSSL 0.9.8k 25 Mar 2009
+----
+
+* OpenSSL configuration file
+
+ First, create a directory for new CA: <<<${CA_DIR}>>>.
+
+------------------------------------------------------------------------------------
+$ cp /usr/lib/ssl/openssl.cnf ${CA_DIR}/openssl.cnf
+------------------------------------------------------------------------------------
+
+ Edit <<<openssl.cnf>>> to resembel this:
+ 
+------------------------------------------------------------------------------------
+#
+# OpenSSL example configuration file.
+# This is mostly being used for generation of certificate requests.
+#
+
+# This definition stops the following lines choking if HOME isn't
+# defined.
+HOME			= .
+RANDFILE		= $ENV::HOME/.rnd
+
+oid_section		= new_oids
+
+[ new_oids ]
+
+####################################################################
+[ ca ]
+default_ca	= CA_default		# The default ca section
+
+####################################################################
+[ CA_default ]
+
+dir		= .		# Where everything is kept
+certs		= $dir/certs		# Where the issued certs are kept
+crl_dir		= $dir/crl		# Where the issued crl are kept
+database	= $dir/contrailCA/index.txt	# database index file.
+new_certs_dir	= $dir/newcerts		# default place for new certs.
+certificate	= $dir/ca.crt 	# The CA certificate
+serial		= $dir/contrailCA/serial 		# The current serial number
+crlnumber	= $dir/contrailCA/crlnumber	# the current crl number
+crl		= $dir/contrailCA/crl.pem 		# The current CRL
+private_key	= $dir/private/cakey.pem # The private key
+RANDFILE	= $dir/private/.rand	# private random number file
+
+x509_extensions	= usr_cert		# The extentions to add to the cert
+
+name_opt 	= ca_default		# Subject Name options
+cert_opt 	= ca_default		# Certificate field options
+
+default_days	= 365			# how long to certify for
+default_crl_days= 30			# how long before next CRL
+default_md	= sha1			# which md to use.
+preserve	= no			# keep passed DN ordering
+policy		= policy_match
+
+[ policy_match ]
+countryName		= match
+stateOrProvinceName	= match
+organizationName	= match
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+[ policy_anything ]
+countryName		= optional
+stateOrProvinceName	= optional
+localityName		= optional
+organizationName	= optional
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+[ req ]
+default_bits		= 1024
+default_keyfile 	= privkey.pem
+distinguished_name	= req_distinguished_name
+attributes		= req_attributes
+x509_extensions	= v3_ca	# The extentions to add to the self signed cert
+
+# Passwords for private keys if not present they will be prompted for
+# input_password = secret
+# output_password = secret
+
+string_mask = nombstr
+
+[ req_distinguished_name ]
+countryName			= Country Name (2 letter code)
+countryName_default		= SI ## CHANGE
+countryName_min			= 2
+countryName_max			= 2
+
+stateOrProvinceName		= State or Province Name (full name)
+stateOrProvinceName_default	= Slovenia		## CHANGE
+
+localityName			= Locality Name (eg, city)
+0.organizationName		= Organization Name (eg, company)
+0.organizationName_default	= XLAB d.o.o.  ## CHANGE
+
+# we can do this but it is not needed normally :-)
+
+organizationalUnitName		= Organizational Unit Name (eg, section)
+commonName			= Common Name (eg, YOUR name)
+commonName_max			= 64
+
+emailAddress			= Email Address
+emailAddress_max		= 64
+
+# SET-ex3			= SET extension number 3
+
+[ req_attributes ]
+challengePassword		= A challenge password
+challengePassword_min		= 4
+challengePassword_max		= 20
+
+unstructuredName		= An optional company name
+
+[ usr_cert ]
+
+basicConstraints=CA:FALSE
+
+# This is OK for an SSL server.
+# nsCertType			= server
+
+nsComment			= "OpenSSL Generated Certificate"
+
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer
+
+[ v3_req ]
+
+# Extensions to add to a certificate request
+
+basicConstraints = CA:FALSE
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment
+
+[ v3_ca ]
+
+
+subjectKeyIdentifier=hash
+
+authorityKeyIdentifier=keyid:always,issuer:always
+
+basicConstraints = CA:true
+
+[ crl_ext ]
+
+authorityKeyIdentifier=keyid:always,issuer:always
+
+[ proxy_cert_ext ]
+
+basicConstraints=CA:FALSE
+
+nsComment			= "OpenSSL Generated Certificate"
+
+subjectKeyIdentifier=hash
+authorityKeyIdentifier=keyid,issuer:always
+
+proxyCertInfo=critical,language:id-ppl-anyLanguage,pathlen:3,policy:foo
+------------------------------------------------------------------------------------
+
+* CA directory structure
+ 
+ Directory structure uder <<<${CA_DIR}>>>:
+ 
+-------
+.
+contrailCA 
+crl
+newcerts
+private
+-------
+
+* Certificate authority
+ 
+ Create a certificate authority:
+ 
+------------------------------------------------------------------------------------
+openssl genrsa -out ca.key 1024
+openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
+mkdir -p contrailCA/newcerts
+touch contrailCA/index.txt
+echo '01' > contrailCA/serial
+------------------------------------------------------------------------------------
+
+* Server certificate
+ 
+ Create a server certificate (use configuration file copied from <<</usr/lib/ssl/>>>):
+ 
+------------------------------------------------------------------------------------
+openssl genrsa -out server.key 2048
+openssl req -new -key server.key -out server.csr
+openssl ca -config openssl.cnf -keyfile ca.key -cert ca.crt -out server.crt -infiles server.csr
+------------------------------------------------------------------------------------
+
+* Client certificate
+
+------------------------------------------------------------------------------------
+openssl genrsa -out client.key 2048
+openssl req -new -key client.key -out client.csr
+openssl ca -config openssl.cnf -keyfile ca.key -cert ca.crt -out client.crt -infiles client.csr
+------------------------------------------------------------------------------------
+
+* Importing certificates into Java key stores
+
+  Truststore (used to validate client certificates):
+
+------------------------------------------------------------------------------------
+keytool -import -keystore cacerts.jks -storepass contrail -alias ca -file ca.crt
+------------------------------------------------------------------------------------
+
+  Keystore (server certificate):
+
+------------------------------------------------------------------------------------
+openssl pkcs12 -export -in server.crt -inkey server.key -out server.p12 -name server \
+   -CAfile ca.crt -caname xlab-ca -chain
+keytool -importkeystore -deststorepass contrail -destkeypass contrail -destkeystore \
+   server.jks -srckeystore server.p12 -srcstoretype PKCS12 -alias server
+------------------------------------------------------------------------------------
+
+Tomcat configuration
+
+  Configure the SSL connector in the $CATALINA_BASE/conf/server.xml file, where
+  $CATALINA_BASE represents the base directory for the Tomcat 6 instance:
+
+------------------------------------------------------------------------------------
+<Connector port="8443" protocol="org.apache.coyote.http11.Http11Protocol"
+		   SSLEnabled="true" maxThreads="150" scheme="https" secure="true"
+		   clientAuth="true" sslProtocol="TLS"
+		   keystoreFile="${catalina.base}/conf/server.jks"
+		   keystorePass="*********"
+		   truststoreFile="${catalina.base}/conf/cacerts.jks"
+		   truststorePass="*********" />
+------------------------------------------------------------------------------------
+
+  The <<clientAuth>> attribute is set to true so that Tomcat requires a valid certificate
+  chain from the client before accepting a connection. The <<keystoreFile>> attribute
+  contains a pathname of the key store file where the server certificate is stored.
+  If the key store contains more than one certificate the keyAlias should be specified
+  which determines which certificate to use. The <<truststoreFile>> attribute specifies
+  the trust store file containing the CA certificate chain to use to validate client
+  certificates.
+
+Deploying federation-id-prov to Tomcat
+
+  Go to the project root directory and run following commands:
+
+------------------------------------------------------------------------------------
+mvn war:war
+cp target/federation-id-prov.war $CATALINA_BASE/webapps
+------------------------------------------------------------------------------------
+
+  Tomcat will detect the new WAR file in webaps directory and automatically deploy it.
+
+Enabling/disabling non-secure (HTTP) access
+
+  To enable/disable non-secure (HTTP) access to the REST API (e.g. for testing purposes)
+  open the web.xml file in the $PROJECT_ROOT\src\main\webapp\WEB-INF directory and
+  configure the <<transport-guarantee>> attribute. The value <<CONFIDENTIAL>> specifies
+  that secured connection is required, value <<NONE>> allows also HTTP access.
+
+------------------------------------------------------------------------------------
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>federation-id-prov</web-resource-name>
+        <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+</security-constraint>
+------------------------------------------------------------------------------------
+
+Testing HTTPS access
+
+  To test if the HTTPS access to the federation-api has been configured correctly run the
+  following command:
+
+------------------------------------------------------------------------------------
+curl -X GET https://HOSTNAME:8443/federation-api/providers
+   --cacert ca.crt --cert client.crt --key client.key
+------------------------------------------------------------------------------------
+
+ You can optionally use <<<-k>>> switch (<<<--insecure>>>) in order to prevent curl to
+ check for hostname in the certificate. Useful when server certificate has been generated
+ incorrectly.
+
+------------------------------------------------------------------------------------
+curl -k -X GET https://HOSTNAME:8443/federation-api/providers
+   --cacert ca.crt --cert client.crt --key client.key
+------------------------------------------------------------------------------------
+
+  ca.crt is the certificate of the CA that signed the server and client certificate.
+client.crt and client.key are the client certificate and private key in PEM format.
+If everything is correct you will receive a JSON response.
+
+  If server certificate is not trusted by the client (curl) you will receive
+following error:
+
+------------------------------------------------------------------------------------
+SSL certificate problem, verify that the CA cert is OK. Details:
+error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed
+------------------------------------------------------------------------------------
+
+  If client certificate is not valid (i.e. not signed by the correct CA) you will receive
+following error:
+
+------------------------------------------------------------------------------------
+error:14094416:SSL routines:SSL3_READ_BYTES:sslv3 alert certificate unknown
+------------------------------------------------------------------------------------
+
+  If the client certificate holder is not authorized to access the requested resource
+you will receive HTTP status code 403 - Forbidden.

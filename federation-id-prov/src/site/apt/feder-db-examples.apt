@@ -1,0 +1,223 @@
+Examples for usage of federation identity database
+
+ Under <<<src/main/resources/user-db/example_db.sh>>> there is a script which can be used to fill 
+ the database with example values.
+ 
+ Generate user passwords:
+ 
+----
+JOHNPWD=`echo johnspwd | shasum`
+BOBPWD=`echo bobspwd | shasum`
+ALICEPWD=`echo alicespwd | shasum`
+----
+
+----
+HP=${HOST}:${PORT}
+----
+  
+  Inserting attributes.
+
+----
+curl -X POST --header "Content-Type: application/json" \
+-d '{name: "phone",uri: "contrail:user:attibute:phone",\
+defaultValue: "", reference:"User",  description:"SomeDesc"}' ${HP}attributes
+
+curl -X POST --header "Content-Type: application/json" \
+-d '{name: "xacml-attr",uri: "contrail:xacml:attibute:xacml-attr",\
+defaultValue: "", reference:"User", description:"SomeDesc"}' ${HP}attributes
+----
+
+  Inserting user roles and groups.
+
+----
+curl -X POST --header "Content-Type: application/json" -d \
+'{name: FederationUser , description: "This is normal federation user.",\
+ acl: ""}' ${HP}roles
+ 
+curl -X POST --header "Content-Type: application/json" \
+-d '{name: FederationCoordinator , description: \
+"Role for federation coordinator.", acl: ""}' ${HP}roles
+
+curl -X POST --header "Content-Type: application/json" \
+-d '{name: CloudAdministrator , description: "Role for Cloud Administrator.", \
+acl: ""}' ${HP}roles
+
+curl -X POST --header "Content-Type: application/json" \
+-d '{name: "developer" , description: "Developers"}' ${HP}groups
+curl -X POST --header "Content-Type: application/json" \
+-d '{name: "user" , description: "Role for federation coordinator.", acl: ""}' ${HP}groups
+----
+
+
+  Inserting users.
+
+----
+curl -X POST --header "Content-Type: application/json" \
+-d "{username: john , firstName: John, lastName: Jonatan, \
+email:joh@contrail.eu, password: ${JOHNPWD} }" ${HP}users
+
+curl -X POST --header "Content-Type: application/json" \
+-d "{username: alice,firstName: Alice,lastName: Although, \
+email:alice@contrail.eu, password: ${ALICEPWD} }" ${HP}users
+
+curl -X POST --header "Content-Type: application/json" \
+-d "{username: bob,firstName: Bob,lastName: Sinclare, \
+email:bob@contrail.eu, password: ${BOBPWD} }" ${HP}users
+----
+
+  Inserting user roles and attributes.
+
+----
+echo "John's role:"
+
+curl -X POST --header "Content-Type: application/json" \
+-d "{roleId: 1}" ${HP}users/1/roles
+
+echo "Bob\n"
+curl -X POST --header "Content-Type: application/json" \
+-d "{value: xacml-attr-value , referenceId: 3, attributeId:4}" \
+${HP}users/3/attributes
+
+curl -X POST --header "Content-Type: application/json" \
+-d "{value: newgroup , referenceId: 3, attributeId:2}" \
+${HP}users/3/attributes
+
+curl -X POST --header "Content-Type: application/json" \
+-d "{value: 040214241 , referenceId: 3, attributeId:3}" \
+${HP}users/3/attributes
+
+
+echo "John\n"
+curl -X POST --header "Content-Type: application/json" \
+-d "{value: FederationUser , referenceId: 1, attributeId:1}" \
+${HP}users/1/attributes
+
+curl -X POST --header "Content-Type: application/json" \
+-d "{value: newgroup , referenceId: 1, attributeId:2}" \
+${HP}users/1/attributes
+
+curl -X POST --header "Content-Type: application/json" \
+-d "{value: 040214241 , referenceId: 1, attributeId:3}" \
+${HP}users/1/attributes
+
+echo "Alice\n"
+curl -X POST --header "Content-Type: application/json" \
+-d "{value: FederationCoordinator , referenceId: 2, attributeId:1}" \
+${HP}users/2/attributes
+
+curl -X POST --header "Content-Type: application/json" \
+-d "{value: newgroup , referenceId: 2, attributeId:2}" \
+${HP}users/2/attributes
+
+curl -X POST --header "Content-Type: application/json" \
+-d "{value: +123456 , referenceId: 2, attributeId:3}" \
+${HP}users/2/attributes
+----
+
+
+Use case: inserting new attribute and assign it to the user
+
+ In this example we create a new attribute <<<regdate>>> which defines the date
+ of registration and assign it to user <<<alice>>>. 
+
+* Create the attribute
+
+----
+curl -X POST --header "Content-Type: application/json" \
+-d '{name: "regdate",uri: "contrail:user:attibute:regdate",\
+defaultValue: "20-12-2011", reference:"User", description: \
+"User registration date."}' ${HP}attributes
+----
+
+ returns OK. Created link is forwarded in the header "Created".  
+
+* List the attribute
+
+----
+# List the attributes
+$ curl -X GET ${HP}attributes
+[{"name":"phone","uri":"/attributes/1"},{"name":"regdate","uri":"/attributes/2"}]
+
+$ curl -X GET ${HP}attributes/2
+}
+----
+
+ returns OK:
+
+----
+{"description":"User registration date.","name":"regdate",\
+"attributeId":2,"defaultValue":"20-12-2011","uri":"contrail:user:attibute:regdate",\
+"reference":"User"
+----
+
+* Update the attribute if needed
+
+----
+curl -X PUT --header "Content-Type: application/json" \
+-d '{name: "regdate",uri: "contrail:user:attibute:new:regdate", \
+defaultValue: "21-12-2011", reference:"NewUser", \
+description: "New User registration date."}' \
+${HP}attributes/2
+----
+
+ returns OK
+
+* Assign the attribute to the user
+
+ First, list user attributes:
+ 
+----
+curl -X GET ${HP}users/1/attributes
+----
+
+ Assign the attribute <<<regdate>>> to <<<Alice>>>:
+
+----
+curl -X POST --header "Content-Type: application/json" \
+-d '{value: "16.1.2012" , referenceId: 1, attributeId:2}' \
+${HP}users/1/attributes
+----
+
+ returns OK: 
+
+ Show the attribute <<<regdate>>> of <<<Alice>>>.
+
+----
+$ curl -X GET ${HP}users/1/attributes
+[{"name":"phone","uri":"/users/1/attributes/1"},{"name":"regdate","uri":"/users/1/attributes/2"}]
+
+$ curl -X GET ${HP}users/1/attributes/2
+----
+
+ returns OK: 
+
+----
+{"value":"16.1.2012"}
+----
+
+ Modify user attribute (change the date):
+
+----
+curl -X PUT --header "Content-Type: application/json" \ 
+-d '{value:"17.1.2011"}' ${HP}users/1/attributes/2
+----
+
+ Get the modified value:
+
+----
+$ curl -X GET ${HP}users/1/attributes/2
+----
+
+ Returns OK: 
+
+----
+{"value":"17.1.2011"}
+----
+
+ Delete the attribute:
+
+----
+$ curl -X DELETE ${HP}users/1/attributes/2
+----
+
+ Returns OK.

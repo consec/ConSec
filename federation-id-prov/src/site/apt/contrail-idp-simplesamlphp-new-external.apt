@@ -1,0 +1,131 @@
+Contrail Identity Provider - adding external IdP 
+
+* Installation
+
+ Here we describe installation procedure for external IdP.
+
+** Contrail package installation
+
+ First, you will need to install the SimpleSAMLphp the same as in section "Contrail Identity Provider Set-up: IdP using SimpleSAMLphp" 
+
+** Adding external IdP module
+
+ The package from the tarball already contains a bit modified OpenIDConsumer module, namely OpenIDContrailConsumer:
+
+----
+./modules/openid/lib/Auth/Source/OpenIDContrailConsumer.php
+----
+
+ 1. Identitfy user to external OpenID provider
+
+ 2. Consume attributes and translate those to Contrail-aware attributes
+
+ 3. Finds a user from contrail-federation-db directly and returns OpenID attributes with those from the contrail database
+
+** Modify 'config/authsources.php'
+
+----
+// Example of an authsource that authenticates against Google.
+        // See: http://code.google.com/apis/accounts/docs/OpenID.html
+        'google-contrail' => array(
+                'openid:OpenIDContrailConsumer',
+
+		'dsn' => 'mysql:host=localhost;port=3306;dbname=contrail',
+                'username' => 'contrail',
+                'password' => 'XXXXXXX',
+
+                // Googles OpenID endpoint.
+                'target' => 'https://www.google.com/accounts/o8/id',
+                // Custom realm
+                // 'realm' => 'http://*.example.org',
+                // Attributes that google can supply.
+                'attributes.ax_required' => array(
+                        'http://axschema.org/namePerson/first',
+                        'http://axschema.org/contact/email',
+                ),
+                // custom extension arguments
+                'extension.args' => array(
+                        //'http://specs.openid.net/extensions/ui/1.0' => array(
+                        //      'mode' => 'popup',
+                        //      'icon' => 'true',
+                        //),
+                ),
+        ),
+
+----
+
+** Modify 'metadata/saml20-idp-hosted.php'
+
+ Important: host addressing is important at this stage which means that SimplSAMLphp installation should be accessible via 'federation.<domain>' and 'google.<domain>'. Client using these prefixes chooses this way between different IdPs provided by this SimpleSAMLphp installation. This is for automatic authentication, so that user does not need to choose manually after SimpleSAMLphp is contacted by the SP (e.g. 'federation-web').
+
+----
+<?php
+/**
+ * SAML 2.0 IdP configuration for simpleSAMLphp.
+ *
+ * See: https://rnd.feide.no/content/idp-hosted-metadata-reference
+ */
+
+$metadata['__DYNAMIC:1__'] = array(
+        /*
+         * The hostname of the server (VHOST) that will use this SAML entity.
+         *
+         * Can be '__DEFAULT__', to use this entry by default.
+         */
+        'host' => 'federation.contrail-idp.xlab.si',
+
+        /* X.509 key and certificate. Relative to the cert directory. */
+        'privatekey' => 'server.pem',
+        'certificate' => 'server.crt',
+
+        /*
+         * Authentication source to use. Must be one that is configured in
+         * 'config/authsources.php'.
+         */
+        'auth' => 'example-userpass',
+
+        /* Uncomment the following to use the uri NameFormat on attributes. */
+        /*
+        'attributes.NameFormat' => 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+        'authproc' => array(
+                // Convert LDAP names to oids.
+                100 => array('class' => 'core:AttributeMap', 'name2oid'),
+        ),
+        */
+
+);
+
+
+$metadata['__DYNAMIC:2__'] = array(
+        /*
+         * The hostname of the server (VHOST) that will use this SAML entity.
+         *
+         * Can be '__DEFAULT__', to use this entry by default.
+         */
+        'host' => 'google.contrail-idp.xlab.si',
+
+        /* X.509 key and certificate. Relative to the cert directory. */
+        'privatekey' => 'server.pem',
+        'certificate' => 'server.crt',
+
+        /*
+         * Authentication source to use. Must be one that is configured in
+         * 'config/authsources.php'.
+         */
+        'auth' => 'google-contrail',
+
+        /* Uncomment the following to use the uri NameFormat on attributes. */
+        /*
+        'attributes.NameFormat' => 'urn:oasis:names:tc:SAML:2.0:attrname-format:uri',
+        'authproc' => array(
+                // Convert LDAP names to oids.
+                100 => array('class' => 'core:AttributeMap', 'name2oid'),
+        ),
+        */
+
+);
+----
+
+* Client (SP) setup
+
+ TODO

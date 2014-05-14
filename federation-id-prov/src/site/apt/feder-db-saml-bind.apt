@@ -1,0 +1,114 @@
+SAML Binding - how to create SAML Attribute Queries
+
+ Here we provide details on the usage of SAML to query and obtain 
+ SAML responses on user attributes. The implementation uses <<<SAML SOAP binding>>>. More deatail
+ on the protocol reside here: <<<docs.oasis-open.org/security/saml/v2.0/saml-bindings-2.0-os.pdf>>>.
+ Note this binding only supports the use of SOAP 1.1
+ 
+ SOAP 1.1 messages consist of three elements: an envelope, header data, and a message body. SAML
+ request-response protocol elements MUST be enclosed within the SOAP message body.
+ 
+ The system model used for SAML conversations over SOAP is a simple request-response model.
+ 
+ From the SAML over SOAP standard:
+
+---- 
+ A system entity acting as a SAML requester transmits a SAML request element within the body of
+ a SOAP message to a system entity acting as a SAML responder. The SAML requester MUST
+ NOT include more than one SAML request per SOAP message or include any additional XML
+ elements in the SOAP body.
+ 
+ The SAML responder MUST return either a SAML response element within the body of another
+ SOAP message or generate a SOAP fault. The SAML responder MUST NOT include more than
+ one SAML response per SOAP message or include any additional XML elements in the SOAP
+ body. 
+----
+ 
+ Following is an example of a query that asks for an assertion containing an attribute statement about user
+ <<<John>>> and his attribute <<<phone>>> from a SAML attribute authority. 
+ 
+----
+$ curl -X POST --header "Content-Type: application/soap+xml" \
+-d @AttributeQuery.xml  http://localhost:8080/federation-id-prov/saml
+----
+
+ Content of <<<AttributeQuery.xml>>>:
+ 
+----
+?xml version="1.0" encoding="UTF-8" ?>
+<soap11:Envelope xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/">
+<soap11:Body>
+<samlp:AttributeQuery
+  xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+  ID="AttrQuery12345789"
+  IssueInstant="2009-07-15T15:48:16.421Z"
+  Version="2.0"
+>
+  <saml:Issuer
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+  >http://somecom.com/SomeJavaRelyingParty</saml:Issuer>
+  <saml:Subject
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+  >
+    <saml:NameID>john</saml:NameID>
+  </saml:Subject>
+  <saml:Attribute
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    Name="phone"
+  />
+</samlp:AttributeQuery>
+</soap11:Body>
+</soap11:Envelope>
+---- 
+
+ The response is following (<<<phone>>> attribute should exist):
+
+----
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<soap11:Envelope
+  xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/"
+>
+  <soap11:Body>
+    <saml2p:Response
+      xmlns:saml2p="urn:oasis:names:tc:SAML:2.0:protocol"
+      ID="_6ca6e62f9278f2fbb6bed5f165a66484"
+      IssueInstant="2012-01-16T10:25:55.717Z"
+      Version="2.0"
+    >
+      <saml2:Issuer
+        xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+      >http://0.0.0.0/federation-id-prov/saml</saml2:Issuer>
+      <saml2p:Status>
+        <saml2p:StatusCode
+          Value="urn:oasis:names:tc:SAML:2.0:status:Success"
+        />
+      </saml2p:Status>
+      <saml2:Assertion
+        xmlns:saml2="urn:oasis:names:tc:SAML:2.0:assertion"
+        ID="_9decf182ddfa85c67b1ed223b4830297"
+        IssueInstant="2012-01-16T10:25:55.698Z"
+        Version="2.0"
+      >
+        <saml2:Issuer>http://0.0.0.0:8080/federation-id-prov/saml</saml2:Issuer>
+        <saml2:Subject>
+          <saml2:NameID
+            Format="urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
+          >john</saml2:NameID>
+        </saml2:Subject>
+        <saml2:Conditions
+          NotBefore="2012-01-16T10:25:45.698Z"
+          NotOnOrAfter="2012-01-16T10:55:55.698Z"
+        />
+        <saml2:AttributeStatement>
+          <saml2:Attribute
+            Name="phone"
+          >
+            <saml2:AttributeValue>+386 40 214241</saml2:AttributeValue>
+          </saml2:Attribute>
+        </saml2:AttributeStatement>
+      </saml2:Assertion>
+    </saml2p:Response>
+  </soap11:Body>
+</soap11:Envelope>
+----

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Maven">
+    <bannerLeft>
+        <name>Maven</name>
+        <src>http://maven.apache.org/images/apache-maven-project.png</src>
+        <href>http://maven.apache.org/</href>
+    </bannerLeft>
+    <bannerRight>
+        <src>http://maven.apache.org/images/maven-small.gif</src>
+    </bannerRight>
+    <body>
+        <links>
+            <item name="Contrail" href="http://contrail-project.eu/"/>
+            <item name="Apache" href="http://www.apache.org/"/>
+            <item name="Maven 2" href="http://maven.apache.org/"/>
+        </links>
+
+        <menu name="Federation Identity DB">
+            <item name="Introduction" href="index.html"/>
+            <item name="Usage of Identity DB" href="feder-api-usage.html"/>
+            <item name="Examples for inserting data" href="feder-db-examples.html"/>
+            <item name="SAML queries/responses" href="feder-db-saml-bind.html"/>
+            <item name="Tomcat deployment" href="tomcat-deployment.html"/>
+            <item name="Simple authorization" href="simple-authorization.html"/>
+            <item name="Contrail Identity Provider Set-up: IdP using SimpleSAMLphp"
+                  href="contrail-idp-simplesamlphp.html"/>
+            <item name="Contrail Identity Provider Set-up: adding external Idp (google)"
+                  href="contrail-idp-simplesamlphp-new-external.html"/>
+        </menu>
+
+        <menu ref="reports"/>
+    </body>
+</project>

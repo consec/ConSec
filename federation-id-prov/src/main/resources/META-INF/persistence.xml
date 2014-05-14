@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="appPU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Cluster</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Cee</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Storage</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Network</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Provider</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Vm</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.User</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.UserOvf</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Server</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Edc</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.DataCenter</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Vo</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Ovf</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.User</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Attribute</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.Application</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.IdentityProvider</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.URole</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.UGroup</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.UserhasAttribute</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.UserSLA</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.UserSLATemplate</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.UserhasAttributePK</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.UserhasidentityProvider</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.UserhasidentityProviderPK</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.SLATemplate</class>
+        <class>org.ow2.contrail.federation.federationdb.jpa.entities.SLATemplateProposal</class>
+        <properties>
+            <property name="eclipselink.cache.shared.default" value="false"/>
+            <property name="eclipselink.target-database" value="MySQL"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/contrail"/>
+            <property name="javax.persistence.jdbc.password" value="contrail"/>
+            <property name="javax.persistence.jdbc.user" value="contrail"/>
+        </properties>
+    </persistence-unit>
+</persistence>

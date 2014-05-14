@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<soap11:Envelope xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap11:Body>
+        <samlp:AttributeQuery
+                xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+                ID="AttrQuery12345789"
+                IssueInstant="2009-07-15T15:48:16.421Z"
+                Version="2.0"
+                >
+            <saml:Issuer
+                    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+                    >http://somecom.com/SomeJavaRelyingParty
+            </saml:Issuer>
+            <saml:Subject
+                    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+                    >
+                <saml:NameID>contrailuser</saml:NameID>
+            </saml:Subject>
+            <!--
+              <saml:Attribute
+                xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+                Name="reputation"
+              />
+            -->
+            <!--<saml:Attribute
+              xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+              Name="phone"
+            /> -->
+        </samlp:AttributeQuery>
+    </soap11:Body>
+</soap11:Envelope>
