@@ -1,0 +1,39 @@
+[ req ]
+default_md = sha1
+distinguished_name = req_distinguished_name
+
+[ req_distinguished_name ]
+countryName = Country
+countryName_default = SI
+countryName_min = 2
+countryName_max = 2
+localityName = Locality
+localityName_default = Ljubljana
+organizationName = Organization
+organizationName_default = Contrail
+commonName = CommonName
+commonName_default = *.contrail-idp.contrail.eu
+commonName_max = 64
+
+[ certauth ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer:always
+basicConstraints = CA:true
+crlDistributionPoints = @crl
+
+[ server ]
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+nsCertType = server
+crlDistributionPoints = @crl
+
+[ client ]
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment, dataEncipherment
+extendedKeyUsage = clientAuth
+nsCertType = client
+crlDistributionPoints = @crl
+
+[ crl ]
+URI=http://localhost/ca.crl

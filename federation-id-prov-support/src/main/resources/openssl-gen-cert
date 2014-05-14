@@ -1,0 +1,11 @@
+#!/bin/bash
+
+mkdir -p cert
+
+openssl req -config contrail-openssl.cnf -newkey rsa:2048 -nodes -keyform PEM -keyout cert/ca.key -x509 -days 3650 -extensions certauth -outform PEM -out cert/ca.cer -batch
+
+openssl genrsa -out cert/contrail-federation-idp.key 2048
+
+openssl req -config contrail-openssl.cnf -new -key cert/contrail-federation-idp.key -out cert/contrail-federation-idp.req -batch
+
+openssl x509 -req -in cert/contrail-federation-idp.req -CA cert/ca.cer -CAkey cert/ca.key -set_serial 100 -extfile contrail-openssl.cnf -extensions server -days 3650 -outform PEM -out cert/contrail-federation-idp.cert

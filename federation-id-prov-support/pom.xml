@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.consec</groupId>
+    <artifactId>federation-id-prov-support</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>federation-id-prov-support</name>
+    <description>Support project for federation-id-prov. Contains SimpleSAMLphp sources to be used as Contrail IdP.
+    </description>
+
+    <parent>
+        <groupId>org.consec</groupId>
+        <artifactId>consec</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../parent-pom</relativePath>
+    </parent>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <id>generate-php-package</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>make</executable>
+                            <arguments>
+                                <argument>build</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>create-tar-archive</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <executable>make</executable>
+                            <arguments>
+                                <argument>dist</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>clean</id>
+                        <phase>clean</phase>
+                        <configuration>
+                            <executable>make</executable>
+                            <arguments>
+                                <argument>clean</argument>
+                            </arguments>
+                        </configuration>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

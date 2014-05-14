@@ -1,0 +1,5 @@
+<VirtualHost *:80>
+        ServerName localhost
+        DocumentRoot /usr/share/simplesamlphp-1.9.0/www
+        Alias /simplesaml /usr/share/simplesamlphp-1.9.0/www
+</VirtualHost>
