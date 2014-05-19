@@ -1,7 +1,7 @@
 package org.ow2.contrail.federation.federationapi;
 
 import org.apache.log4j.Logger;
-import org.consec.federationdb.utils.PersistenceUtils;
+import org.consec.federationdb.utils.EMF;
 import org.ow2.contrail.common.oauth.client.atmanager.MemoryOAuthATManager;
 import org.ow2.contrail.common.oauth.client.atmanager.OAuthATManagerFactory;
 import org.ow2.contrail.federation.federationapi.utils.Conf;
@@ -136,7 +136,7 @@ public class MyServletContextListener implements ServletContextListener {
             }
             Conf.getInstance().setAppDataRoot(appDataRoot);
 
-            PersistenceUtils.createInstance("appPU");
+            EMF.init("appPU");
 
             // initialize OAuth access token manager
             MemoryOAuthATManager oAuthATManager = new MemoryOAuthATManager(
