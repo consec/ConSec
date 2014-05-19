@@ -1,0 +1,110 @@
+{% extends 'federation/base.html' %}
+
+{% block head_title %}Auditing Events{% endblock %}
+
+{% block nav_auditing %}active{% endblock %}
+
+{% block title %}
+    <h2>Auditing Events</h2>
+{% endblock %}
+
+{% block css_imports %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.10.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}lib/qTip2/jquery.qtip.min.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/auditing.css"/>
+    <link rel="stylesheet" href="{{ STATIC_URL }}lib/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css"/>
+{% endblock %}
+
+{% block js_imports %}
+    {{ block.super }}
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/jquery-ui/jquery-ui-1.8.10.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/d3js/d3.v3.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/handlebars/handlebars-v1.3.0.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/qTip2/jquery.qtip.min.js"></script>
+    <script type="text/javascript"
+            src="{{ STATIC_URL }}lib/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/RainbowVis-JS/rainbowvis.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/sprintf-js/sprintf.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}federation/auditing/auditing.js"></script>
+
+    <script id="event-info-template" type="text/x-handlebars-template"
+            src="{{ STATIC_URL }}federation/auditing/event-info-template.handlebars"></script>
+    <script id="access-token-info-template" type="text/x-handlebars-template"
+            src="{{ STATIC_URL }}federation/auditing/access-token-info-template.handlebars"></script>
+{% endblock %}
+
+{% block head_extra %}
+    <script type="text/javascript">
+        var auditManagerAddress = "{{ auditManagerUrl }}";
+        var oauthASAddress = "{{ oauthASAdminUrl }}";
+        var fedApiAddress = "{{ fedApiUrl }}";
+    </script>
+    {{ block.super }}
+{% endblock %}
+
+{% block content %}
+    <div id="auditing_container">
+        <div id="filters">
+            <table style="border:none">
+                <tr>
+                    <td>Time</td>
+                    <td>
+                        <table style="border:none">
+                            <tr>
+                                <td>
+                                    <input type="radio" id="timeInputMethodLT" name="timeInputMethod" value="lastTime"/>Last
+                                </td>
+                                <td>
+                                    <select id="lastTimeSelector">
+                                        <option value="" style="color: gray">Please select</option>
+                                        <option value="300">Last 5 minutes</option>
+                                        <option value="600">Last 10 minutes</option>
+                                        <option value="900">Last 15 minutes</option>
+                                        <option value="1800">Last 30 minutes</option>
+                                        <option value="3600">Last hour</option>
+                                        <option value="43200">Last 12 hours</option>
+                                        <option value="86400">Last 24 hours</option>
+                                        <option value="today">Today</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="radio" id="timeInputMethodFromTo" name="timeInputMethod"
+                                           value="fromTo"/>From/To
+                                </td>
+                                <td>
+                                    <input type="text" id="start-time-picker" placeholder="From"/>
+                                    <input type="text" id="end-time-picker" placeholder="To"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Users</td>
+                    <td>
+                        <select name="users" id="users-select" style="width: 200px">
+                            <option value="">All</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="button" value="Show" onclick="requestAuditingEventsReport()"/>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <p>
+
+        <div id="timeline" style="height:400px"></div>
+        </p>
+        <p>
+
+        <div id="interaction-diagram" style="height:800px"></div>
+        </p>
+    </div>
+{% endblock %}

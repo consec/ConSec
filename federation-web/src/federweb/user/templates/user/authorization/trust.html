@@ -1,0 +1,71 @@
+{% extends 'user/authorization/base.html' %}
+
+{% load common ui %}
+
+{% block subnav_authorization_trust %}active{% endblock %}
+
+{% block title %}
+  <h2>Authorization trust</h2>
+{% endblock %}
+
+
+{% block js_imports %}
+{{ block.super }}
+        <script type="text/javascript">
+            var url = '/federation/authorization/trust/modify/';
+
+            function trustModify(trust, organizationID, clientID) {
+                $.post(url + organizationID + (clientID?'/clients/' + clientID : ''),
+                        JSON.stringify({'trust': trust}),
+                        function (data, status, jqXHR) {
+                    window.location.reload(false);
+                });
+            }
+        </script>
+{% endblock %}
+
+
+{% block content %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for object in model.full %}
+      <tr>
+        <td><b>{{ object.name }}</b></td>
+        <td>
+          <ul class="trust-list">
+          <li><button class="btn{% if object.trusted == 1 %} btn-primary{% endif %}"
+                      onclick="trustModify(1, {{ object.id }})">Trusted</button></li>
+          <li><button class="btn{% if object.trusted == 2 %} btn-primary{% endif %}"
+                  onclick="trustModify(2, {{ object.id }})">Untrusted</button></li>
+          <li><button class="btn{% if object.trusted == 0 %} btn-primary{% endif %}"
+                  onclick="trustModify(0, {{ object.id }})">Default</button></li>
+          </ul>
+        </td>
+      </tr>
+      {% for client in object.clients %}
+        <tr>
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ client.name }}</td>
+          <td>
+            <ul class="trust-list">
+            <li><button class="btn{% if client.trusted == 1 %} btn-primary{% endif %}"
+                      onclick="trustModify(1, {{ object.id }}, {{ client.id }})">Trusted</button></li>
+          <li><button class="btn{% if client.trusted == 2 %} btn-primary{% endif %}"
+                  onclick="trustModify(2, {{ object.id }}, {{ client.id }})">Untrusted</button></li>
+          <li><button class="btn{% if client.trusted == 0 %} btn-primary{% endif %}"
+                  onclick="trustModify(0, {{ object.id }}, {{ client.id }})">Default</button></li>
+            </ul>
+          </td>
+        </tr>
+      {% endfor %}
+    {% empty %}
+      <tr><td colspan="100%" class="table-empty">No organizations yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'auth/account_settings.html' %}
+
+{% load common ui %}
+
+{% block subnav_base_account_settings %}active{% endblock %}
+
+{% block title %}
+  <h2>Common user's account settings</h2>
+{% endblock %}
+
+{% block content %}
+  {% form_errors form %}
+  <div class="login-form">
+    <h3>account details for user {{ username }}</h3>
+    <form action="" method="post">
+      {% csrf_token %}
+
+      <fieldset>
+        {% form_field form.first_name %}
+        {% form_field form.last_name %}
+        {% form_field form.email %}
+        {% form_field form.password1 %}
+        {% form_field form.password2 %}
+        {% form_field form.roles %}
+        <button class="btn btn-primary" type="submit">update</button>
+      </fieldset>
+
+       <h3>external identities</h3>
+		<ul>
+			{% for id in available_ids %}
+      		<li>{{ id }}  <button class="btn btn-danger" type="submit" name="delete_id" value="{{ id }}">revoke</button> </li>
+      		{% endfor %}
+    	</ul>
+
+    	<h4>add external identity</h4>
+    	please, provide an identity (e.g. email) before adding a new identity for to the user.
+	    <ul>
+          {% for name in available_idps %}
+      	    <li>{{ name }}: <input type="text" name="identity-{{ name }}" /> <button class="btn btn-primary" type="submit" name = "add_id" value="{{ name }}">add</button></li>
+          {% endfor %}
+        </ul>
+        </p>
+        <h3>delegated user certificate preview:</h3>
+        <a href="#" onclick="toggle_visibility('delegated_cert');">show/hide delegated user certificate</a>
+			<div id="delegated_cert" style="display: none">
+			{% if delegated_cert %}
+				<textarea rows="10" cols="40">
+				{{ delegated_cert }}
+				</textarea>
+			{% else %}
+				user does not have delegated certificate.
+			{% endif %}
+			</div>
+		<div>
+			<button class="btn btn-primary" type="submit" name="dl_cert" value="1">download certificate</button>
+			<button class="btn btn-primary" type="submit" name="dl_priv_key" value="1">download private key</button>
+		</div>
+    </form>
+
+  </div>
+{% endblock %}

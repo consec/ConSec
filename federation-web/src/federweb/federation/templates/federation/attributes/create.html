@@ -1,0 +1,35 @@
+{% extends 'federation/attributes/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Create attribute{% endblock %}
+
+{% block subnav_attributes_create %}active{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_attributes_create as url %}{% breadcrumb 'Create attribute' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Create attribute</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+      
+      {% form_field form.name 'Name' %}
+      {% form_field form.uri 'URI' %}
+      {% form_field form.default_value 'Default value' %}
+      {% form_field form.reference 'Reference' %}
+      {% form_field form.description 'Description' %}
+      
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Create attribute</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

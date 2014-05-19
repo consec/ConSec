@@ -1,0 +1,12 @@
+{% load common %}<div class="control-group {% if field.errors %}error{% endif %}">
+  {% if label != 'none' %}
+    <label for="{{ field.id_for_label }}" class="control-label">{{ label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
+  {% endif %}
+  <div class="controls">
+    {{ field|field_class:field_class }}
+    {% if extra %}<span class="help-inline">{{ extra }}</span>{% endif %}
+    {% for error in field.errors %}
+      <span class="help-inline">{{ error }}</span>
+    {% endfor %}
+  </div>
+</div>

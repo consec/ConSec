@@ -1,0 +1,43 @@
+<IfModule mod_ssl.c>
+<VirtualHost *:443>
+    ServerName contrail-federation-web.contrail.eu
+    Alias /static /var/lib/contrail/federation/federation-web/static
+    
+    WSGIScriptAlias / /usr/lib/contrail/federation-web/bin/django.wsgi
+    
+    WSGIDaemonProcess federweb-ssl user=contrail group=contrail processes=5 threads=10 home=/tmp
+    
+    WSGIProcessGroup federweb-ssl
+
+    SSLEngine on
+    SSLCertificateFile    /usr/lib/contrail/federation-web/extra/contrail-federation-web.cert
+    SSLCertificateKeyFile /usr/lib/contrail/federation-web/extra/contrail-federation-web.key
+    
+    ErrorLog /var/log/apache2/federation-web-ssl-error.log
+
+    # Possible values include: debug, info, notice, warn, error, crit,
+    # alert, emerg.
+    LogLevel warn
+
+    CustomLog /var/log/apache2/federation-web-ssl.log combined
+
+
+    <Directory /usr/lib/contrail/federation-web>
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+    
+    <Directory /var/lib/contrail/federation/federation-web/static>
+        Options FollowSymLinks
+        AllowOverride None
+        Order allow,deny
+        Allow from all
+    </Directory>
+    
+    <Location /static/>
+        Options -Indexes
+    </Location>
+</VirtualHost>
+</IfModule>

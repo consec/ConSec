@@ -1,0 +1,187 @@
+#monitor_container {
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-left: -240px;
+    margin-bottom: 0px;
+
+    #abc {
+        label {
+            display: inline-block;
+        }
+
+        /* providers and sids */
+        #providers {
+            .provider label {
+                font-weight: bold;
+            }
+            .server {
+                margin-left: 10px;
+            }
+        }
+    }
+
+    /* tooltip */
+    div.tooltip {
+        position: absolute;
+        text-align: center;
+        /*width: 60px;*/
+        /*height: 12px;*/
+        padding: 8px;
+        font: 10px sans-serif;
+        background: #ddd;
+        border: solid 1px #aaa;
+        border-radius: 8px;
+        pointer-events: none;
+
+        p {
+            margin: 0px;
+        }
+    }
+}
+
+/* svg */
+svg {
+    display: inline-block;
+
+    margin: 20px;
+
+    font: 10px sans-serif;
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000000;
+        shape-rendering: crispEdges;
+    }
+
+    .threshold {
+        opacity: .125;
+        &.WARNING {
+            fill: yellow;
+        }
+        &.CRITICAL {
+            fill: red;
+        }
+    }
+
+    .loading {
+        .led {
+            fill: none;
+            stroke: #00ff00;
+            opacity: 0;
+        }
+        .one {
+            -webkit-animation: blip 1s ease-in-out 0s infinite alternate;
+            animation: blip 1s ease-in-out 0s infinite alternate;
+        }
+        .two {
+            -webkit-animation: blip 1s ease-in-out 0.1s infinite alternate;
+            animation: blip 1s ease-in-out 0.1s infinite alternate;
+        }
+        .three {
+            -webkit-animation: blip 1s ease-in-out 0.2s infinite alternate;
+            animation: blip 1s ease-in-out 0.2s infinite alternate;
+        }
+        .four {
+            -webkit-animation: blip 1s ease-in-out 0.3s infinite alternate;
+            animation: blip 1s ease-in-out 0.3s infinite alternate;
+        }
+        @-webkit-keyframes blip {
+            0% {
+                stroke-width: 0;
+                opacity: 0;
+            }
+            50% {
+                stroke-width: 5;
+                opacity: 1;
+            }
+            100% {
+                stroke-width: 0;
+                opacity: 0;
+            }
+        }
+        @keyframes blip {
+            0% {
+                stroke-width: 0;
+                opacity: 0;
+            }
+            50% {
+                stroke-width: 5;
+                opacity: 1;
+            }
+            100% {
+                stroke-width: 0;
+                opacity: 0;
+            }
+        }
+    }
+
+    /* sunburst */
+    &.sunburst-chart {
+        .hoverLabel {
+            pointer-events: none;
+        }
+    }
+
+    &.single-metric-chart {
+        .y.axis {
+            .major {
+                stroke-opacity: 0.3;
+            }
+            .minor {
+                stroke-opacity: 0.2;
+            }
+        }
+
+        .title {
+            font-weight: bold;
+        }
+
+        .line {
+            fill: none;
+            stroke-width: 1.5px;
+
+            &.lineMin {
+                stroke: #4f4fee;
+            }
+
+            &.lineAvg {
+                stroke: #00c000;
+            }
+
+            &.lineMax {
+                stroke: #ff0000;
+            }
+        }
+    }
+
+    /*stacked*/
+    &.stacked-chart {
+        .y.axis {
+            .major {
+                /*stroke-opacity: 1;*/
+            }
+            .minor {
+                /*stroke-opacity: 0.2;*/
+            }
+        }
+    }
+
+    /* graph legend */
+    foreignObject div {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .brush .extent {
+        stroke: #000;
+        fill-opacity: .125;
+        shape-rendering: crispEdges;
+    }
+}
+
+#dialog-modal > svg {
+    margin: auto;
+}

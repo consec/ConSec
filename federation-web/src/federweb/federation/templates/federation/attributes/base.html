@@ -1,0 +1,16 @@
+{% extends 'federation/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Attributes{% endblock %}
+
+{% block nav_attributes %}active{% endblock %}
+
+{% block subnav %}
+  <li class="{% block subnav_attributes %}{% endblock %}"><a href="{% url federation_attributes %}">Attributes</a></li>
+  <li class="{% block subnav_attributes_create %}{% endblock %}"><a href="{% url federation_attributes_create %}">Create Attribute</a></li>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_attributes as url %}{% breadcrumb 'Attributes' url %}{{ block.super }}
+{% endblock %}

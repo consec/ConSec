@@ -1,0 +1,16 @@
+{% extends 'federation/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Roles{% endblock %}
+
+{% block nav_roles %}active{% endblock %}
+
+{% block subnav %}
+  <li class="{% block subnav_roles %}{% endblock %}"><a href="{% url federation_roles %}">Roles</a></li>
+  <li class="{% block subnav_roles_create %}{% endblock %}"><a href="{% url federation_roles_create %}">Create Role</a></li>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_roles as url %}{% breadcrumb 'Roles' url %}{{ block.super }}
+{% endblock %}

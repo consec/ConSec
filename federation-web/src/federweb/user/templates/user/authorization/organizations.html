@@ -1,0 +1,38 @@
+{% extends 'user/authorization/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Organizations{% endblock %}
+
+{% block subnav_authorization_organizations %}active{% endblock %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block title %}
+  <h2>Authorization organizations</h2>
+{% endblock %}
+
+
+{% block content %}
+  <table class="table table-striped sortable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for object in model.full %}
+      <tr>
+        <td>{{ object.name }}</td>
+        <td>
+            Test
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="100%" class="table-empty">No organizations yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

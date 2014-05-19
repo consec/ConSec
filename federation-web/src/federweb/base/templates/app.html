@@ -1,0 +1,70 @@
+{% load compress %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% block head_title %}{% endblock %} | Contrail</title>
+  <meta name="description" content="Contrail">
+  <meta name="author" content="Contrail Project">
+  
+  <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico">
+  
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  
+  {% if DEBUG %}
+    <link rel="stylesheet/less" href="{{ STATIC_URL }}less/style.less">
+  {% else %}
+    {% compress css %}
+      <link type="stylesheet/css" rel="stylesheet" href="{{ STATIC_URL }}css/style.css">
+    {% endcompress %}
+  {% endif %}
+  
+  {% compress css %}
+  {% block css_imports %}{% endblock %}
+  {% block css_alter %}{% endblock %}
+  {% endcompress %}
+  
+  {% block css_raw %}{% endblock %}
+  
+  {% if DEBUG %}
+    <script src="{{ STATIC_URL }}js/libs/less-1.2.1.min.js"></script>
+  {% endif %}
+  
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}">
+  {% block body_start %}{% endblock %}
+  
+  {% block body %}{% endblock %}
+  
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="{{ STATIC_URL }}js/jquery/jquery-1.7.1.min.js"%3E%3C/script%3E'))</script>
+  {% compress js %}
+  <script src="{{ STATIC_URL }}js/libs/selectivizr.js"></script>
+  <script src="{{ STATIC_URL }}js/libs/jquery.jgrowl-min.js"></script>
+  {% endcompress %}
+  
+  {% block js_imports %}
+  <script src="/static/js/bootstrap/bootstrap-transition.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-alert.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-modal.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-dropdown.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-scrollspy.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-tab.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-tooltip.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-popover.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-button.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-collapse.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-carousel.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-typeahead.js"></script>
+  
+  {% endblock %}
+  
+  <script type="text/javascript">
+    $( function() { {% block js_ready %}{% endblock %} });
+  </script>
+  
+  {% block body_end %}{% endblock %}
+</body>
+</html>

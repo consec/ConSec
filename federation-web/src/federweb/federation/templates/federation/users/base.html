@@ -1,0 +1,16 @@
+{% extends 'federation/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Users{% endblock %}
+
+{% block nav_users %}active{% endblock %}
+
+{% block subnav %}
+  <li class="{% block subnav_users %}{% endblock %}"><a href="{% url federation_users %}">Users</a></li>
+  <li class="{% block subnav_users_create %}{% endblock %}"><a href="{% url federation_users_create %}">Create user</a></li>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_users as url %}{% breadcrumb 'Users' url %}{{ block.super }}
+{% endblock %}

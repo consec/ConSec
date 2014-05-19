@@ -1,0 +1,32 @@
+{% extends 'federation/providers/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Create provider{% endblock %}
+
+{% block subnav_providers_create %}active{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_providers_create as url %}{% breadcrumb 'Create provider' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Create Provider</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+      
+      {% form_field form.name 'Name' %}
+      {% form_field form.provider_uri 'Provider URI' %}
+      
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Create provider</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

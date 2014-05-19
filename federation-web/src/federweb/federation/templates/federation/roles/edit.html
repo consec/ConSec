@@ -1,0 +1,31 @@
+{% extends 'federation/roles/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Edit role{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_roles_edit object.id as url %}{% breadcrumb 'Edit Role' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Edit role</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+      
+      {% form_field form.name 'Name' %}
+      {% form_field form.description 'Description' %}
+      {% form_field form.acl 'ACL' %}
+            
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

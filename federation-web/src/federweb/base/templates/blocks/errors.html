@@ -1,0 +1,8 @@
+{% if form.non_field_errors %}
+  <div class="alert alert-error">
+    <a class="close" data-dismiss="alert" href="#">×</a>
+    {% for error in form.non_field_errors %}
+      {% if forloop.last %}{{ error }}{% else %}<p>{{ error }}</p>{% endif %}
+    {% endfor %}
+  </div>
+{% endif %}

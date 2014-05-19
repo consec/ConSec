@@ -1,0 +1,18 @@
+{% extends 'small.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Login{% endblock %}
+
+{% block body_class %}login{% endblock %}
+
+{% block content %}
+
+    <p>Please select your <strong>Identity Provider</strong> from the following list:</p>
+    <ul>
+      {% for url, name in available_idps %}
+      <li><a href="{% url djangosaml2.views.login %}?idp={{ url }}{% if came_from %}&next=/login{% endif %}">{{ name }}</a></li>
+      {% endfor %}
+    </ul>
+    
+{% endblock %}

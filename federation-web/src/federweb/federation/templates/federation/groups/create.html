@@ -1,0 +1,31 @@
+{% extends 'federation/groups/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Create group{% endblock %}
+
+{% block subnav_groups_create %}active{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_groups_create as url %}{% breadcrumb 'Create group' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Create group</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+      
+      {% form_field form.name 'Name' %}
+      
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Create group</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

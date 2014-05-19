@@ -1,0 +1,29 @@
+{% extends 'federation/authorization/organizations.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Edit organization{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_authorizaton_organizations_edit object.id as url %}{% breadcrumb 'Edit Organizaton' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Edit organization</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+      
+      {% form_field form.name 'Name' %}
+      
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

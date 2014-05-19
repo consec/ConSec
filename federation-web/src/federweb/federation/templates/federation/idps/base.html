@@ -1,0 +1,16 @@
+{% extends 'federation/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Identity Providers{% endblock %}
+
+{% block nav_idps %}active{% endblock %}
+
+{% block subnav %}
+  <li class="{% block subnav_idps %}{% endblock %}"><a href="{% url federation_idps %}">Identity Providers</a></li>
+  <li class="{% block subnav_idps_create %}{% endblock %}"><a href="{% url federation_idps_create %}">Create Identity Provider</a></li>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_idps as url %}{% breadcrumb 'Identity Providers' url %}{{ block.super }}
+{% endblock %}

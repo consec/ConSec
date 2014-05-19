@@ -1,0 +1,40 @@
+{% extends 'federation/users/base.html' %}
+
+{% load common ui %}
+
+{% block subnav_users %}active{% endblock %}
+
+{% block title %}
+  <h2>Users</h2>
+{% endblock %}
+
+
+{% block content %}
+  <table class="table table-striped sortable">
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Roles</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for object in model.full %}
+      <tr>
+        <td>{{ object.username }}</td>
+        <td>{{ object.firstName }}</td>
+        <td>{{ object.lastName }}</td>
+        <td>{% for role in object.roles.all %}{{ role.name }} {% endfor %}</td>
+        {% listaction %}
+          <li><a href="{% url federation_users_edit object.id %}"><i class="icon-pencil"></i> Edit</a></li>
+          <li><a href="{% url federation_users_remove object.id %}"><i class="icon-remove"></i> Remove</a></li>
+        {% endlistaction %}
+      </tr>
+    {% empty %}
+      <tr><td colspan="100%" class="table-empty">No users yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

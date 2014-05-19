@@ -1,0 +1,44 @@
+{% extends 'federation/authorization/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Organizations{% endblock %}
+
+{% block subnav_authorization_organizations %}active{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_authorization_organizations as url %}{% breadcrumb 'Organizations' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Authorization organizations</h2>
+{% endblock %}
+
+
+{% block content %}
+  <table class="table table-striped sortable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for object in model.full %}
+      <tr>
+        <td>{{ object.name }}</td>
+        {% listaction %}
+          <li><a href="{% url federation_authorization_organizations_clients object.id %}"><i class="icon-question-sign"></i> Clients</a></li>
+          <li><a href="{% url federation_authorization_organizations_edit object.id %}"><i class="icon-pencil"></i> Edit</a></li>
+          <li><a href="{% url federation_authorization_organizations_remove object.id %}"><i class="icon-remove"></i> Remove</a></li>
+        {% endlistaction %}
+        <td>
+            Test
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="100%" class="table-empty">No organizations yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

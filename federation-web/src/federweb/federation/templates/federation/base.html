@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Federation{% endblock %}
+
+{% block nav %}
+  <li class="{% block nav_dashboard %}{% endblock %}"><a href="{% url federation %}">Dashboard</a></li>
+  <li class="{% block nav_users %}{% endblock %}"><a href="{% url federation_users %}">Users</a></li>
+  <li class="{% block nav_providers %}{% endblock %}"><a href="{% url federation_providers %}">Providers</a></li>
+  <li class="{% block nav_attributes %}{% endblock %}"><a href="{% url federation_attributes %}">Attributes</a></li>
+  <li class="{% block nav_idps %}{% endblock %}"><a href="{% url federation_idps %}">IDPs</a></li>
+  <li class="{% block nav_roles %}{% endblock %}"><a href="{% url federation_roles %}">Roles</a></li>
+  <li class="{% block nav_groups %}{% endblock %}"><a href="{% url federation_groups %}">Groups</a></li>
+  <li class="{% block nav_authorization %}{% endblock %}"><a href="{% url federation_authorization_trust %}">Authorization</a></li>
+  <li class="{% block nav_auditing %}{% endblock %}"><a href="{% url federation_auditing %}">Auditing</a></li>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation as url %}{% breadcrumb 'Home' url %}{{ block.super }}
+{% endblock %}

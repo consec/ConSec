@@ -1,0 +1,33 @@
+{% extends 'small.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Registration{% endblock %}
+
+{% block body_class %}login{% endblock %}
+
+{% block content %}
+  {% form_errors form %}
+  
+  <div class="login-form">
+    <h2>Registration</h2>
+    <form action="" method="post">
+      {% csrf_token %}
+      <fieldset>
+        {% form_field form.first_name %}
+        {% form_field form.last_name %}
+        {% form_field form.username %}
+        {% form_field form.email %}
+        {% form_field form.password1 %}
+        {% form_field form.password2 %}
+        
+        <button class="btn btn-primary" type="submit">Sign up</button>
+      </fieldset>
+    </form>
+  </div>
+{% endblock %}
+
+{% block links_footer %}
+  {{ block.super }}
+  | <a href="{% url login %}">Login</a>
+{% endblock %}

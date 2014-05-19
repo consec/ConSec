@@ -1,0 +1,15 @@
+{% extends 'user/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Authorization{% endblock %}
+
+{% block nav_authorization %}active{% endblock %}
+
+{% block subnav %}
+  <li class="{% block subnav_authorization_trust %}{% endblock %}"><a href="{% url user_authorization_trust %}">Trust</a></li>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% url user_authorization_trust as url %}{% breadcrumb 'Authorization trust' url %}{{ block.super }}
+{% endblock %}

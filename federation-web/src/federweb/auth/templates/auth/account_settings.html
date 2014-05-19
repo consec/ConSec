@@ -1,0 +1,22 @@
+{% extends 'auth/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}User's account settings{% endblock %}
+
+{% block body_class %}Account settings{% endblock %}
+
+{% block title %}
+  <h2>Account settings</h2>
+{% endblock %}
+
+{% block nav_account_settings %}active{% endblock %}
+
+{% block subnav %}
+  <li class="{% block subnav_base_account_settings %}{% endblock %}"><a href="{% url base_account_settings %}">Account settings</a></li>
+  <li class="{% block subnav_attributes_account_settings %}{% endblock %}"><a href="{% url attributes_account_settings %}">User attributes</a></li>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% url account_settings as url %}{% breadcrumb 'Account Settings' url %}{{ block.super }}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'federation/roles/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Create role{% endblock %}
+
+{% block subnav_roles_create %}active{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_roles_create as url %}{% breadcrumb 'Create role' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Create role</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+      
+      {% form_field form.name 'Name' %}
+      {% form_field form.description 'Description' %}
+      {% form_field form.acl 'ACL' %}
+      
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Create role</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

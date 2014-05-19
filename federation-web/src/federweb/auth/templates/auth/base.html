@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Federation{% endblock %}
+
+{% block breadcrumbs %}
+{% url login as url %}{% breadcrumb 'Home' url %}{{ block.super }}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'federation/idps/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Edit Identity Provider{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_idps_edit object.id as url %}{% breadcrumb 'Edit Identity Provider' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Edit Identity Provider</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+      
+      {% form_field form.name 'Name' %}
+      {% form_field form.uri 'URI' %}
+      {% form_field form.description 'Description' %}
+      
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

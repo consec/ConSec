@@ -1,0 +1,41 @@
+{% extends 'federation/authorization/organizations.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Clients{% endblock %}
+
+{% block subnav_authorization_organizations %}active{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_authorization_organizations_clients object.organization_id as clients_url %}{% breadcrumb 'Clients' clients_url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Organization clients</h2>
+{% endblock %}
+
+
+{% block content %}
+        <a href="{% url federation_authorization_organizations_clients_create organization_id %}"><button class="btn btn-primary" type="submit">Create client</button></a>
+  <table class="table table-striped sortable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for object in model.full %}
+      <tr>
+        <td>{{ object.name }}</td>
+        {% listaction %}
+          <li><a href="{% url federation_authorization_organizations_clients_edit object.organization_id object.id %}"><i class="icon-pencil"></i> Edit</a></li>
+          <li><a href="{% url federation_authorization_organizations_clients_remove object.organization_id object.id %}"><i class="icon-remove"></i> Remove</a></li>
+        {% endlistaction %}
+      </tr>
+    {% empty %}
+      <tr><td colspan="100%" class="table-empty">No clients yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

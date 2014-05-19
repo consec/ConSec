@@ -1,0 +1,32 @@
+{% extends 'app.html' %}
+
+{% load common %}
+
+{% block body %}
+<div class="container">
+  <div class="row">
+  	<div class="span4 logo">
+  	  <a href="/"><img src="{{ STATIC_URL }}img/logo.png" alt="Contrail" /></a>
+	  </div>
+  </div>
+  <div class="content">
+    <div class="row">
+      <div class="span4">
+        {% include "blocks/messages.html" %}
+        
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+  
+  <hr>
+  
+  <footer>
+    <p>
+      {% block links_footer %}
+      <a href="http://contrail-project.eu/">Contrail project</a>
+      {% endblock %}
+    </p>
+  </footer>
+</div>
+{% endblock %}

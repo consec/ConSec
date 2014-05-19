@@ -1,0 +1,33 @@
+{% extends 'federation/idps/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Create Identity Provider{% endblock %}
+
+{% block subnav_idps_create %}active{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_idps_create as url %}{% breadcrumb 'Create Identity Provider' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Create Identity Provider</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+      
+      {% form_field form.name 'Name' %}
+      {% form_field form.uri 'URI' %}
+      {% form_field form.description 'Description' %}
+      
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Create Identity Provider</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

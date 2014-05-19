@@ -1,0 +1,16 @@
+{% extends 'federation/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Groups{% endblock %}
+
+{% block nav_groups %}active{% endblock %}
+
+{% block subnav %}
+  <li class="{% block subnav_groups %}{% endblock %}"><a href="{% url federation_groups %}">Groups</a></li>
+  <li class="{% block subnav_groups_create %}{% endblock %}"><a href="{% url federation_groups_create %}">Create Group</a></li>
+{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_groups as url %}{% breadcrumb 'Groups' url %}{{ block.super }}
+{% endblock %}

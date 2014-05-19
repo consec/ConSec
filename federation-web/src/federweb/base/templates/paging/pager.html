@@ -1,0 +1,16 @@
+{% if paginator.has_pages %}
+	<div class="pager-wrapper">
+	  <div class="pager">
+  	<div class="first">{% if not paginator.is_first %}<a href="?{{ query_string|escape }}&amp;p=1">First</a>{% else %}<span>First</span>{% endif %}</div>
+  	<div class="prev">{% if paginator.has_previous %}<a href="?{{ query_string|escape }}&amp;p={{ paginator.previous_page }}">Previous</a>{% else %}<span>Previous</span>{% endif %}</div>
+  	<div class="pagedisplay">{{ paginator.page }} of {{ paginator.num_pages }}</div>
+  	{% comment %}{% for p in paginator.page_range %}
+    <li{% if p == paginator.page %} class="paging-current"{% endif %}><a href="?{{ query_string|escape }}&amp;p={{ p }}">{{ p }}</a></div>
+  	{% endfor %}
+  	{% endcomment %}
+  	<div class="next">{% if paginator.has_next %}<a href="?{{ query_string|escape }}&amp;p={{ paginator.next_page }}">Next</a>{% else %}<span>Next</span>{% endif %}</div>
+  	<div class="last">{% if not paginator.is_last %}<a href="?{{ query_string|escape }}&amp;p={{ paginator.num_pages }}">Last</a>{% else %}<span>Last</span>{% endif %}</div>
+  	<div class="clear"></div>
+	  </div>
+	</div>
+{% endif %}

@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<md:EntitiesDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="https://multi.contrail.xlab.si/simplesaml/saml2/idp/metadata.php">
+  <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:KeyDescriptor use="signing">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIDkDCCAngCAgE2MA0GCSqGSIb3DQEBBQUAMHoxCzAJBgNVBAYTAlNJMREwDwYDVQQIDAhTbG92ZW5pYTESMBAGA1UEBwwJTGp1YmxqYW5hMREwDwYDVQQKDAhDb250cmFpbDELMAkGA1UEAwwCQ0ExJDAiBgkqhkiG9w0BCQEWFWFsZXMuY2Vybml2ZWNAeGxhYi5zaTAeFw0xMzA0MDMwODMwNTRaFw0yMzA0MDEwODMwNTRaMIGgMQswCQYDVQQGEwJTSTERMA8GA1UECBMIU2xvdmVuaWExEjAQBgNVBAcTCUxqdWJsamFuYTEUMBIGA1UEChMLWExBQiBkLm8uby4xETAPBgNVBAsTCFJlc2VhcmNoMRswGQYDVQQDFBIqLmNvbnRyYWlsLnhsYWIuc2kxJDAiBgkqhkiG9w0BCQEWFWFsZXMuY2Vybml2ZWNAeGxhYi5zaTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ8FaSgZ9ki0OPcn1lheEk/WKSmmZaEpGRN3gO4uSMGA9YoKiwFmnvhhefGImBIk9w+5YAiBvVfQj9+Kh0r1y4sqqkOI0AR6Ei5VcCxnF/Yc9ntUtfQulHHMTce4MVVfJknmkw9NNImVasu92qBG9SLx29ld22JPnYr3qYxbLs964GjDWZ/bdkqc5b73EhE6lDEjtS8o7OdJba35iUgzWu1JssleZKshOLb7ScRqatbSNUwNv40T+lpgMCftuqpP/VqA7EvkWFkX7EI8GgEeCC68kSUjT5tun4XunB5bt/H3ZL9JtdMHFRy1jfMGh1++2Sg12Y39RBgwEoR1O/Qegp8CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAAiPxU104as7dxMMGv56PvDSPYdWLkKXkNbgKvhn11SLiIqNOW075vChv313sLYeTCgBAhzhZaF8hztixdl9Fu3Ao4wStsr71Cj7GrnsU0zVcFVtJVqn67eD/vwzS/hz9pqdXh7lyazCr/uO4Xi0Kls/YCwbLuGdOzPXinvA/DqlWlbu8/f7QtVcVCYSpKsVf1rTCLNBqmczfffe0PrFh60kCr2+oeeN3j3oZ0SS04uK98g5bey0LygMhnbJuCKVD36b2cOCQAYxNtlglz/1BhBfAYkHeq1CpETmNEm6YakGKBWwCHLCpUTPSW5FjqsBcCgFQTOJV/xh+9xZ2xqxA6A==</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:KeyDescriptor use="encryption">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIDkDCCAngCAgE2MA0GCSqGSIb3DQEBBQUAMHoxCzAJBgNVBAYTAlNJMREwDwYDVQQIDAhTbG92ZW5pYTESMBAGA1UEBwwJTGp1YmxqYW5hMREwDwYDVQQKDAhDb250cmFpbDELMAkGA1UEAwwCQ0ExJDAiBgkqhkiG9w0BCQEWFWFsZXMuY2Vybml2ZWNAeGxhYi5zaTAeFw0xMzA0MDMwODMwNTRaFw0yMzA0MDEwODMwNTRaMIGgMQswCQYDVQQGEwJTSTERMA8GA1UECBMIU2xvdmVuaWExEjAQBgNVBAcTCUxqdWJsamFuYTEUMBIGA1UEChMLWExBQiBkLm8uby4xETAPBgNVBAsTCFJlc2VhcmNoMRswGQYDVQQDFBIqLmNvbnRyYWlsLnhsYWIuc2kxJDAiBgkqhkiG9w0BCQEWFWFsZXMuY2Vybml2ZWNAeGxhYi5zaTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAJ8FaSgZ9ki0OPcn1lheEk/WKSmmZaEpGRN3gO4uSMGA9YoKiwFmnvhhefGImBIk9w+5YAiBvVfQj9+Kh0r1y4sqqkOI0AR6Ei5VcCxnF/Yc9ntUtfQulHHMTce4MVVfJknmkw9NNImVasu92qBG9SLx29ld22JPnYr3qYxbLs964GjDWZ/bdkqc5b73EhE6lDEjtS8o7OdJba35iUgzWu1JssleZKshOLb7ScRqatbSNUwNv40T+lpgMCftuqpP/VqA7EvkWFkX7EI8GgEeCC68kSUjT5tun4XunB5bt/H3ZL9JtdMHFRy1jfMGh1++2Sg12Y39RBgwEoR1O/Qegp8CAwEAATANBgkqhkiG9w0BAQUFAAOCAQEAAiPxU104as7dxMMGv56PvDSPYdWLkKXkNbgKvhn11SLiIqNOW075vChv313sLYeTCgBAhzhZaF8hztixdl9Fu3Ao4wStsr71Cj7GrnsU0zVcFVtJVqn67eD/vwzS/hz9pqdXh7lyazCr/uO4Xi0Kls/YCwbLuGdOzPXinvA/DqlWlbu8/f7QtVcVCYSpKsVf1rTCLNBqmczfffe0PrFh60kCr2+oeeN3j3oZ0SS04uK98g5bey0LygMhnbJuCKVD36b2cOCQAYxNtlglz/1BhBfAYkHeq1CpETmNEm6YakGKBWwCHLCpUTPSW5FjqsBcCgFQTOJV/xh+9xZ2xqxA6A==</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://multi.contrail.xlab.si/simplesaml/saml2/idp/SingleLogoutService.php"/>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://multi.contrail.xlab.si/simplesaml/saml2/idp/SSOService.php"/>
+  </md:IDPSSODescriptor>
+  <md:ContactPerson contactType="technical">
+    <md:GivenName>Contrail</md:GivenName>
+    <md:SurName>admin</md:SurName>
+    <md:EmailAddress>ales.cernivec@xlab.si</md:EmailAddress>
+  </md:ContactPerson>
+</md:EntityDescriptor>
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" entityID="https://multi.contrail-idp.contrail.eu/simplesaml/saml2/idp/metadata.php">
+  <md:IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:KeyDescriptor use="signing">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIDlzCCAn8CAXAwDQYJKoZIhvcNAQEFBQAwejELMAkGA1UEBhMCU0kxETAPBgNVBAgMCFNsb3ZlbmlhMRIwEAYDVQQHDAlManVibGphbmExETAPBgNVBAoMCENvbnRyYWlsMQswCQYDVQQDDAJDQTEkMCIGCSqGSIb3DQEJARYVYWxlcy5jZXJuaXZlY0B4bGFiLnNpMB4XDTEyMTAwMTEzNDg0OFoXDTIyMDkyOTEzNDg0OFowgagxCzAJBgNVBAYTAlNJMREwDwYDVQQIDAhTbG92ZW5pYTESMBAGA1UEBwwJTGp1YmxqYW5hMREwDwYDVQQKDAhDb250cmFpbDEUMBIGA1UECwwLWExBQiBkLm8uby4xIzAhBgNVBAMMGiouY29udHJhaWwtaWRwLmNvbnRyYWlsLmV1MSQwIgYJKoZIhvcNAQkBFhVhbGVzLmNlcm5pdmVjQHhsYWIuc2kwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvr2LDCH8PptIO5hjNkLInI11SYKqZO2sOJDhmh4KckWcVyo7AT52J9ZmslzjYXhUTXxUVdjjsYoVq+QsI1tjQC06KmPCjCvnC8WSk05INX9pHsIxKhsRXXa63/18tZCBefuDhFKVK0sZnmYkBcGDAtxtLiNHPzYdrhAHFRoYPNLBANK/N8Q4ZfSJZYVNmhDi4Ls8tTta7UBOHDqwHbGR+zlVY6EE9QsFkVE1o/D0fJNyvJvzZHHrTH82l8IbRsGecMkwZU1VWgTbxR3S8vxcpkktBRGsGZxQ5neFgdsLYiDn4ZdTdOrxfE4yHQKRQh9v8eUcHr12cdofkC/2XQujfAgMBAAEwDQYJKoZIhvcNAQEFBQADggEBAE8PW+JMLMjebmvnql+YRkzxGfhsOU4fByT2+OkG5n82e1QYb5/6Qy0SytOBijNZGa1cyqiVc2vrSXC/jMeg21LLOTcou4MXFlY/aZWBRha/d7qVAKl2iGnQ9FwAb/D+mFmDYmhocZOy8ZgdtwBi7AfEWD866mWrcGnZPiwDidaunSpLLyvF/kOl/rKcpSdkdoSKXq74yrzGGQLuRSf98+Rkr1tZsw6RMMDabD1CSJoVKZuqZe4q2/kal8K4DAKvm5lbEySiHqVfOu3dqw5TzaaiHO+k7shkp1Qy1VKVpVngEP3cr+q5Ucds5kWrY57l/ITa5JesReRwm4TWaq3BJ64=</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:KeyDescriptor use="encryption">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIDlzCCAn8CAXAwDQYJKoZIhvcNAQEFBQAwejELMAkGA1UEBhMCU0kxETAPBgNVBAgMCFNsb3ZlbmlhMRIwEAYDVQQHDAlManVibGphbmExETAPBgNVBAoMCENvbnRyYWlsMQswCQYDVQQDDAJDQTEkMCIGCSqGSIb3DQEJARYVYWxlcy5jZXJuaXZlY0B4bGFiLnNpMB4XDTEyMTAwMTEzNDg0OFoXDTIyMDkyOTEzNDg0OFowgagxCzAJBgNVBAYTAlNJMREwDwYDVQQIDAhTbG92ZW5pYTESMBAGA1UEBwwJTGp1YmxqYW5hMREwDwYDVQQKDAhDb250cmFpbDEUMBIGA1UECwwLWExBQiBkLm8uby4xIzAhBgNVBAMMGiouY29udHJhaWwtaWRwLmNvbnRyYWlsLmV1MSQwIgYJKoZIhvcNAQkBFhVhbGVzLmNlcm5pdmVjQHhsYWIuc2kwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvr2LDCH8PptIO5hjNkLInI11SYKqZO2sOJDhmh4KckWcVyo7AT52J9ZmslzjYXhUTXxUVdjjsYoVq+QsI1tjQC06KmPCjCvnC8WSk05INX9pHsIxKhsRXXa63/18tZCBefuDhFKVK0sZnmYkBcGDAtxtLiNHPzYdrhAHFRoYPNLBANK/N8Q4ZfSJZYVNmhDi4Ls8tTta7UBOHDqwHbGR+zlVY6EE9QsFkVE1o/D0fJNyvJvzZHHrTH82l8IbRsGecMkwZU1VWgTbxR3S8vxcpkktBRGsGZxQ5neFgdsLYiDn4ZdTdOrxfE4yHQKRQh9v8eUcHr12cdofkC/2XQujfAgMBAAEwDQYJKoZIhvcNAQEFBQADggEBAE8PW+JMLMjebmvnql+YRkzxGfhsOU4fByT2+OkG5n82e1QYb5/6Qy0SytOBijNZGa1cyqiVc2vrSXC/jMeg21LLOTcou4MXFlY/aZWBRha/d7qVAKl2iGnQ9FwAb/D+mFmDYmhocZOy8ZgdtwBi7AfEWD866mWrcGnZPiwDidaunSpLLyvF/kOl/rKcpSdkdoSKXq74yrzGGQLuRSf98+Rkr1tZsw6RMMDabD1CSJoVKZuqZe4q2/kal8K4DAKvm5lbEySiHqVfOu3dqw5TzaaiHO+k7shkp1Qy1VKVpVngEP3cr+q5Ucds5kWrY57l/ITa5JesReRwm4TWaq3BJ64=</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://multi.contrail-idp.contrail.eu/simplesaml/saml2/idp/SingleLogoutService.php"/>
+    <md:NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</md:NameIDFormat>
+    <md:SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://multi.contrail-idp.contrail.eu/simplesaml/saml2/idp/SSOService.php"/>
+  </md:IDPSSODescriptor>
+  <md:ContactPerson contactType="technical">
+    <md:GivenName>Contrail</md:GivenName>
+    <md:SurName>admin</md:SurName>
+    <md:EmailAddress>ales.cernivec@xlab.si</md:EmailAddress>
+  </md:ContactPerson>
+</md:EntityDescriptor>
+</md:EntitiesDescriptor>

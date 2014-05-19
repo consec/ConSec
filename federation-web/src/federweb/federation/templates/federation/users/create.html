@@ -1,0 +1,36 @@
+{% extends 'federation/users/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Create user{% endblock %}
+
+{% block subnav_users_create %}active{% endblock %}
+
+{% block breadcrumbs %}
+{% url federation_users_create as url %}{% breadcrumb 'Create user' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Create User</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+      
+      {% form_field form.username 'Username' %}
+      {% form_field form.password 'Password' %}
+      {% form_field form.email 'Email' %}
+      {% form_field form.first_name 'First name' %}
+      {% form_field form.last_name 'Last name' %}
+      {% form_field form.roles 'Roles' %}
+      
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Create user</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

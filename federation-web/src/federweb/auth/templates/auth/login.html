@@ -1,0 +1,66 @@
+{% extends 'small.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Login{% endblock %}
+
+{% block body_class %}login{% endblock %}
+
+{% block js_imports %}
+  <script src="/static/js/bootstrap/bootstrap-transition.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-alert.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-modal.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-dropdown.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-scrollspy.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-tab.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-tooltip.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-popover.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-button.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-collapse.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-carousel.js"></script>
+  <script src="/static/js/bootstrap/bootstrap-typeahead.js"></script>
+{% endblock %}
+
+{% block js_ready %}
+  $('#id_username').focus();
+  openid.init('openid_url');
+{% endblock %}
+
+
+{% block content %}
+
+	{% form_errors form %}
+  
+  <div class="login-form">
+    <h2>Login</h2>
+    <form action="" method="post">
+      {% csrf_token %}
+      <fieldset>
+        {% form_field form.username %}
+        {% form_field form.password %}
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </fieldset>
+		<fieldset>
+			<ul class="nav pull-right">
+				<li class="dropdown"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Other sign in methods<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a class="button-link" href="saml2/login">External Id Providers</a></li>
+					</ul></li>
+			</ul>
+		</fieldset>
+	</form>
+
+{% if saml2_error %}
+Could not authenticate. Please, check username and password on your external provider and try again.
+{% endif %}
+
+  </div>
+
+{% endblock %}
+
+{% block links_footer %}
+  {{ block.super }}
+  | <a href="{% url registration %}">Registration</a>
+{% endblock %}
+

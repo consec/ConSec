@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Home{% endblock %}
+
+{% block nav %}
+  <li class="{% block nav_dashboard %}{% endblock %}"><a href="{% url user_dashboard %}">Dashboard</a></li>
+  <li class="{% block nav_authorization %}{% endblock %}"><a href="{% url user_authorization_trust %}">Authorization</a></li>
+  <li class="{% block nav_auditing %}{% endblock %}"><a href="{% url user_auditing %}">Auditing</a></li>
+  <li class="{% block nav_debug %}{% endblock %}"><a href="{% url user_show_debug %}">Debug</a></li>
+{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}

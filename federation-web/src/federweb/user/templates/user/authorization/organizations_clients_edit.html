@@ -1,0 +1,34 @@
+{% extends 'user/authorization/organizations_clients.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Edit client{% endblock %}
+
+{% block breadcrumbs %}
+{% url user_authorization_organizations_clients_edit object.organization_id object.id as url %}{% breadcrumb 'Edit client' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Edit client</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+
+      {% form_field form.client_id 'Client id' %}
+      {% form_field form.name 'Name' %}
+      {% form_field form.authorized_grant_types 'Authorized grant types' %}
+      {% form_field form.callback_uri 'Callback uri' %}
+      {% form_field form.client_secret 'Client secret' %}
+      {% form_field form.countries 'Countries' %}
+
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

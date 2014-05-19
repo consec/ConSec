@@ -1,0 +1,31 @@
+{% extends 'user/authorization/base.html' %}
+
+{% load common ui %}
+
+{% block head_title %}Create organization{% endblock %}
+
+{% block subnav_authorization_organizations_create %}active{% endblock %}
+
+{% block breadcrumbs %}
+{% url user_authorization_organizations_create as url %}{% breadcrumb 'Create organization' url %}{{ block.super }}
+{% endblock %}
+
+{% block title %}
+  <h2>Create organization</h2>
+{% endblock title %}
+
+{% block content %}
+  <form action="" method="post" class="form-horizontal">
+    <fieldset>
+      {% csrf_token %}
+      
+      {% form_errors form %}
+      
+      {% form_field form.name 'Name' %}
+      
+      <div class="form-actions">
+        <button class="btn btn-primary" type="submit">Create organization</button>
+      </div>
+    </fieldset>
+  </form>
+{% endblock %}

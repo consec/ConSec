@@ -1,0 +1,57 @@
+<div class="event-info-table">
+    <table>
+        <tr valign='top'>
+            <td>ID</td>
+            <td>{{id}}</td>
+        </tr>
+        <tr valign='top'>
+            <td>Time</td>
+            <td>{{time}}</td>
+        </tr>
+        <tr valign='top'>
+            <td>Action</td>
+            <td>{{action}}</td>
+        </tr>
+        <tr valign='top'>
+            <td>Outcome</td>
+            <td>{{outcome}}</td>
+        </tr>
+        <tr valign='top'>
+            <td>Initiator</td>
+            <td>
+                <b>ID</b>: {{initiatorId}}<br/>
+
+                <div id='{{onBehalfOfDivId}}'></div>
+            </td>
+        </tr>
+        <tr valign='top'>
+            <td>Access Token</td>
+            <td>
+                <div id='{{accessTokenInfoDivId}}'></div>
+            </td>
+        </tr>
+        <tr valign='top'>
+            <td>Target</td>
+            <td>
+                <b>ID</b>: {{targetId}}
+            </td>
+        </tr>
+        <tr valign='top'>
+            <td>Request</td>
+            <td>
+                <b>Method</b>: {{requestMethod}}</br>
+                <b>URL</b>: {{requestUrl}}</br>
+                <b>Content Type</b>: {{requestContentType}}</br>
+                <b>Content</b>: <div style='word-break: break-all;'>{{requestContent}}</div></br>
+            </td>
+        </tr>
+        <tr valign='top'>
+            <td>Response</td>
+            <td>
+                <b>Status Code</b>: {{responseStatusCode}}</br>
+                <b>Content Type</b>: {{responseContentType}}</br>
+                <b>Content</b>: <div style='word-break: break-all;'>{{responseContent}}</div></br>
+            </td>
+        </tr>
+    </table>
+</div>

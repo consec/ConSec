@@ -1,0 +1,37 @@
+{% extends 'auth/account_settings.html' %}
+
+{% load common ui %}
+
+{% block subnav_attributes_account_settings %}active{% endblock %}
+
+{% block title %}
+  <h2>User attributes</h2>
+{% endblock %}
+
+{% block content %}
+  <table class="table table-striped sortable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Value</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for attribute in user_attributes %}
+      <tr>
+        <td>{{ attribute.name }}</td>
+        <td>{{ attribute.value }}</td>
+        {% comment %}
+        {% listaction %}
+          <li><a href="{% url user_attributes_edit attribute.id %}"><i class="icon-pencil"></i> Edit</a></li>
+          <li><a href="{% url user_attributes_remove attribute.id %}"><i class="icon-remove"></i> Remove</a></li>
+        {% endlistaction %}
+        {% endcomment %}
+      </tr>
+    {% empty %}
+      <tr><td colspan="100%" class="table-empty">No attributes yet.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

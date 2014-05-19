@@ -1,0 +1,80 @@
+#auditing_container {
+  margin-top: 0px;
+  margin-right: 0px;
+  margin-left: -240px;
+  margin-bottom: 0px;
+}
+
+.event-info-table table {
+    border-collapse: collapse;
+}
+
+.event-info-table td, table {
+    border: 1px solid lightgrey;
+    padding: 3px;
+}
+
+.chart-title {
+    font-size: 15px;
+    text-anchor: middle;
+    font-weight: bold;
+}
+
+.chart-message {
+    font-size: 12px;
+    text-anchor: middle;
+    fill: blue;
+}
+
+path.link {
+    fill: none;
+    stroke-width: 1px;
+}
+
+.interaction-node {
+    fill: #ccc;
+    stroke: #333;
+    stroke-width: 1.5px;
+}
+
+text {
+    font: 10px sans-serif;
+    pointer-events: none;
+}
+
+text.shadow {
+    stroke: #fff;
+    stroke-width: 3px;
+    stroke-opacity: .8;
+}
+
+.chart {
+    background-color: white;
+}
+
+.chart rect {
+	stroke: white;
+    fill: steelblue;
+}
+
+.axis {
+    shape-rendering: crispEdges;
+}
+
+.x.axis line {
+    stroke: black;
+}
+
+.y.axis line {
+    stroke: black;
+}
+
+.axis text {
+    font-size: 12px;
+}
+
+.gridlines {
+    stroke: LightGray;
+    stroke-width: 1px;
+    shape-rendering: crispEdges;
+}
