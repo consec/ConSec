@@ -28,9 +28,9 @@
         </dependency>
 
         <dependency>
-            <groupId>bouncycastle</groupId>
+            <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
-            <version>146</version>
+            <version>1.46</version>
         </dependency>
         <!--
 
@@ -39,9 +39,9 @@
 
         -->
         <dependency>
-            <groupId>bouncycastle</groupId>
+            <groupId>org.bouncycastle</groupId>
             <artifactId>bcmail-jdk16</artifactId>
-            <version>146</version>
+            <version>1.46</version>
             <type>jar</type>
         </dependency>
         <dependency>
