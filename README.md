@@ -2,13 +2,26 @@ ConSec
 ======
 ConSec is a federated cloud security framework.
 
+# Features
+* supports standards SAML, OpenID, OAuth 2.0, XACML
+* supports authentication against multiple authentication sources: LDAP, OpenID, SQL database, 
+Shibboleth or a SAML 2.0 Identity Provider 
+* includes SimpleSAMLphp Identity Provider
+* provides SAML-based Single Sign-On
+* provides secure delegated access to protected resources on resource servers via OAuth 2.0 protocol or delegated user 
+certificates
+* provides XACML-based authorization utilizing HERAS-AF XACML evaluation engine
+* provides auditing infrastructure: automated auditing via servlet filter for web apps or REST APIs, 
+library for manually creating audit records, search API for audit records
+* displaying of audit records by various search criteria, visualization of interaction among components  
+
 # Architecture
 
 The following diagram depicts an overview of the architecture of the ConSec framework:
 
 ![ConSec architecture](docs/consec-architecture.jpg)
 
-# Short Description of the Components
+# Short Description of Components
 
 ## Identity Provider (IdP)
 The Identity Provider is responsible for authentication of users and providing user's identity and 
