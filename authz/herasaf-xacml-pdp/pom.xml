@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.consec.authz</groupId>
+    <artifactId>herasaf-xacml-pdp</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <name>HERAS-AF XACML Policy Decision Point</name>
+
+    <parent>
+        <groupId>org.consec</groupId>
+        <artifactId>consec</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../../parent-pom</relativePath>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>  <!-- needed by herasaf-xacml-core -->
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>  <!-- needed by herasaf-xacml-core -->
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.herasaf.xacml.core</groupId>
+            <artifactId>herasaf-xacml-core</artifactId>
+            <version>1.0.0-M2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>herasaf-xacml-pdp</finalName>
+    </build>
+    <repositories>
+        <repository>
+            <id>maven.herasaf.org-releases</id>
+            <name>maven.herasaf.org-releases</name>
+            <url>http://unicore-dev.zam.kfa-juelich.de/maven/</url>
+        </repository>
+    </repositories>
+</project>
