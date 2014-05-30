@@ -1,4 +1,4 @@
-package org.consec.authz.herasaf.pdp;
+package org.consec.authz.herasaf.pdp.core;
 
 import org.apache.log4j.Logger;
 import org.herasaf.xacml.core.SyntaxException;
@@ -16,7 +16,6 @@ import java.io.StringWriter;
 public class FileBasedPolicyRepository extends MapBasedSimplePolicyRepository implements UnorderedPolicyRepository, PolicyRetrievalPoint {
     private static Logger log = Logger.getLogger(FileBasedPolicyRepository.class);
     private File persistentRepository;
-    private static final String policyFilePrefix = "HERASAFPOLICY-";
 
     public FileBasedPolicyRepository(File persistentRepository) throws SyntaxException {
         super();
@@ -56,11 +55,10 @@ public class FileBasedPolicyRepository extends MapBasedSimplePolicyRepository im
         File[] files = persistentRepository.listFiles();
         if (files != null) {
             for (File file : files) {
-                if (file.getName().startsWith(policyFilePrefix)) {
-                    Evaluatable evaluatable = PolicyMarshaller.unmarshal(file);
-                    super.deploy(evaluatable);
-                    log.trace("Policy has been deployed successfully: " + evaluatable.getId());
-                }
+                Evaluatable evaluatable = PolicyMarshaller.unmarshal(file);
+                super.deploy(evaluatable);
+                log.trace(String.format("Policy '%s' has been deployed successfully from file %s.",
+                        evaluatable.getId(), file.getAbsolutePath()));
             }
         }
         log.trace("Policies have been deployed successfully.");
@@ -70,15 +68,13 @@ public class FileBasedPolicyRepository extends MapBasedSimplePolicyRepository im
         File[] files = persistentRepository.listFiles();
         if (files != null) {
             for (File file : files) {
-                if (file.getName().startsWith(policyFilePrefix)) {
-                    file.delete();
-                }
+                file.delete();
             }
         }
     }
 
     private File getPolicyFile(EvaluatableID id) {
-        String fileName = policyFilePrefix + id.getId().replaceAll("\\W", "-");
+        String fileName = id.getId().replaceAll("\\W", "-");
         File policyFile = new File(persistentRepository, fileName);
         return policyFile;
     }

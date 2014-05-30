@@ -1,4 +1,4 @@
-package org.consec.authz.herasaf.pdp;
+package org.consec.authz.herasaf.pdp.core;
 
 import org.apache.log4j.Logger;
 import org.herasaf.xacml.core.PolicyRepositoryException;
@@ -29,15 +29,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-public class HerasafXACMLAuthorizer {
-    private static Logger log = Logger.getLogger(HerasafXACMLAuthorizer.class);
+public class HerasafXACMLEngine {
+    private static Logger log = Logger.getLogger(HerasafXACMLEngine.class);
     private static String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     private PDP pdp;
     private UnorderedPolicyRepository policyRepository;
     private PolicyRetrievalPoint prp;
 
-    public HerasafXACMLAuthorizer(UnorderedPolicyRepository policyRepository) throws Exception {
+    public HerasafXACMLEngine(UnorderedPolicyRepository policyRepository) throws Exception {
         log.trace("Initializing HerasafXACMLAuthorizer.");
 
         this.policyRepository = policyRepository;
@@ -54,8 +54,8 @@ public class HerasafXACMLAuthorizer {
         log.trace("HerasafXACMLAuthorizer initialized successfully.");
     }
 
-    public HerasafXACMLAuthorizer(UnorderedPolicyRepository policyRepository,
-                                  List<String> policyFilePaths) throws Exception {
+    public HerasafXACMLEngine(UnorderedPolicyRepository policyRepository,
+                              List<String> policyFilePaths) throws Exception {
         this(policyRepository);
         for (String policyFilePath : policyFilePaths) {
             deployPolicyFile(new File(policyFilePath));
@@ -74,7 +74,7 @@ public class HerasafXACMLAuthorizer {
         }
     }
 
-    public boolean isAuthorized(AuthSubject authSubject, String resourceURI, String action) {
+    public DecisionType evaluateAccessRequest(AuthSubject authSubject, String resourceURI, String action) {
 
         // subject
         RequestSubject reqSubject = new RequestSubject();
@@ -91,7 +91,7 @@ public class HerasafXACMLAuthorizer {
         // action
         RequestAction reqAction = new RequestAction(Consts.ACTION_NAME_ATTR,
                 new StringDataTypeAttribute(),
-                action.toString());
+                action);
 
         // environment
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
@@ -113,7 +113,7 @@ public class HerasafXACMLAuthorizer {
                 log.trace("XACML request:\n" + writer.toString());
             }
             catch (WritingException e) {
-                // ignore
+                log.trace("Failed to marshal XACML request.");
             }
         }
 
@@ -135,9 +135,7 @@ public class HerasafXACMLAuthorizer {
         // extract decision from the response
         ResponseType responseType = response.getResponse();
         ResultType result = responseType.getResults().get(0);
-        DecisionType decision = result.getDecision();
-
-        return decision.value().equals("Permit");
+        return result.getDecision();
     }
 
     public void redeployPolicy(Policy policy) {

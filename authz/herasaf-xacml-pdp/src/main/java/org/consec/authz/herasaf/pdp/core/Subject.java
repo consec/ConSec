@@ -1,4 +1,7 @@
-package org.consec.authz.herasaf.pdp;
+package org.consec.authz.herasaf.pdp.core;
+
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 
 public class Subject {
     private Type type;
@@ -35,5 +38,11 @@ public class Subject {
         public String getAttributeId() {
             return attributeId;
         }
+    }
+
+    public static Subject fromJson(JSONObject o) throws JSONException {
+        Type type = Type.valueOf(o.getString("type"));
+        String id = o.getString("id");
+        return new Subject(type, id);
     }
 }

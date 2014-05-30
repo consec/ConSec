@@ -1,4 +1,7 @@
-package org.consec.authz.herasaf.pdp;
+package org.consec.authz.herasaf.pdp.core;
+
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,5 +29,14 @@ public class AuthSubject {
         for (Subject subject : subjects) {
             subjectList.add(subject);
         }
+    }
+
+    public static AuthSubject fromJson(JSONArray jsonArray) throws JSONException {
+        AuthSubject authSubject = new AuthSubject();
+        for (int i=0; i<jsonArray.length(); i++) {
+            Subject subject = Subject.fromJson(jsonArray.getJSONObject(i));
+            authSubject.addSubject(subject);
+        }
+        return authSubject;
     }
 }

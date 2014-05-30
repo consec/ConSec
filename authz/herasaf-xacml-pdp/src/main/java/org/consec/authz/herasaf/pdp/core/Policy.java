@@ -1,4 +1,4 @@
-package org.consec.authz.herasaf.pdp;
+package org.consec.authz.herasaf.pdp.core;
 
 import org.apache.log4j.Logger;
 import org.herasaf.xacml.core.WritingException;

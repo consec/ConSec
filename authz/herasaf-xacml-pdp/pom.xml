@@ -41,6 +41,22 @@
             <version>2.0</version>
         </dependency>
         <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-servlet</artifactId>
+            <version>1.18.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-json</artifactId>
+            <version>1.18.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
@@ -50,9 +66,9 @@
     </build>
     <repositories>
         <repository>
-            <id>maven.herasaf.org-releases</id>
+            <id>maven.herasaf.org</id>
             <name>maven.herasaf.org-releases</name>
-            <url>http://unicore-dev.zam.kfa-juelich.de/maven/</url>
+            <url>http://maven.herasaf.org/herasaf-release</url>
         </repository>
     </repositories>
 </project>

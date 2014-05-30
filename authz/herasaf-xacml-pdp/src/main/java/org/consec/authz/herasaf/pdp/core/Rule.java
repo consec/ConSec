@@ -1,4 +1,4 @@
-package org.consec.authz.herasaf.pdp;
+package org.consec.authz.herasaf.pdp.core;
 
 import com.google.gson.Gson;
 import org.consec.authz.herasaf.pdp.utils.JsonUtils;

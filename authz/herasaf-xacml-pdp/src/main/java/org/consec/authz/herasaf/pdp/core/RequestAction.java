@@ -1,4 +1,4 @@
-package org.consec.authz.herasaf.pdp;
+package org.consec.authz.herasaf.pdp.core;
 
 import org.herasaf.xacml.core.context.impl.ActionType;
 import org.herasaf.xacml.core.context.impl.AttributeType;

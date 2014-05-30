@@ -1,6 +1,8 @@
 package org.consec.authz.herasaf.pdp;
 
 import org.apache.log4j.Logger;
+import org.consec.authz.herasaf.pdp.core.*;
+import org.herasaf.xacml.core.context.impl.DecisionType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +17,7 @@ import static org.junit.Assert.*;
 
 public class HerasafAuthorizerTest {
     private static Logger log = Logger.getLogger(HerasafAuthorizerTest.class);
-    private HerasafXACMLAuthorizer authorizer;
+    private HerasafXACMLEngine authorizer;
 
     @org.junit.Rule
     public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -24,7 +26,7 @@ public class HerasafAuthorizerTest {
     public void setUp() throws Exception {
         log.trace(String.format("Using folder %s as persistent repository.", tempFolder.getRoot().getAbsolutePath()));
         FileBasedPolicyRepository repository = new FileBasedPolicyRepository(tempFolder.getRoot());
-        authorizer = new HerasafXACMLAuthorizer(repository);
+        authorizer = new HerasafXACMLEngine(repository);
     }
 
     @Test
@@ -67,38 +69,38 @@ public class HerasafAuthorizerTest {
         authorizer.redeployPolicy(policy);
 
         // check new rules
-        assertFalse(
-                authorizer.isAuthorized(authSubject, "/users/lucy/abcd", Action.READ));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/lucy/abcd", Action.READ), DecisionType.NOT_APPLICABLE);
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/x", Action.READ));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/x", Action.READ), DecisionType.PERMIT);
 
-        assertFalse(
-                authorizer.isAuthorized(authSubject, "/users/john/x", Action.WRITE));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/x", Action.WRITE), DecisionType.NOT_APPLICABLE);
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/x", Action.READ));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/x", Action.READ), DecisionType.PERMIT);
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/x", Action.WRITE));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/x", Action.WRITE), DecisionType.PERMIT);
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/personal/x", Action.READ));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/personal/x", Action.READ), DecisionType.PERMIT);
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/personal/x", Action.WRITE));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/personal/x", Action.WRITE), DecisionType.PERMIT);
 
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john", Action.READ));
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/", Action.READ));
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/x", Action.READ));
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/x/", Action.READ));
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/x/y", Action.READ));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john", Action.READ), DecisionType.PERMIT);
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/", Action.READ), DecisionType.PERMIT);
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/x", Action.READ), DecisionType.PERMIT);
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/x/", Action.READ), DecisionType.PERMIT);
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/x/y", Action.READ), DecisionType.PERMIT);
 
 
         // update auth rule 3
@@ -108,22 +110,22 @@ public class HerasafAuthorizerTest {
         authorizer.redeployPolicy(policy);
 
         // check updated rule
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/personal/x", Action.READ));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/personal/x", Action.READ), DecisionType.PERMIT);
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/personal/x", Action.WRITE));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/personal/x", Action.WRITE), DecisionType.PERMIT);
 
         // delete auth rule 2
         policy.removeRule(rule2Id);
         authorizer.redeployPolicy(policy);
 
         // check if rule was deleted
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/x", Action.READ)); // inherited from /users/john/
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/x", Action.READ), DecisionType.PERMIT); // inherited from /users/john/
 
-        assertFalse(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/x", Action.WRITE));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/x", Action.WRITE), DecisionType.NOT_APPLICABLE);
 
         log.trace("testUserRules() finished successfully.");
     }
@@ -227,46 +229,47 @@ public class HerasafAuthorizerTest {
 
 
         // check rule evaluation
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/x", Action.READ));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/x", Action.READ), DecisionType.PERMIT);
 
-        assertFalse(
-                authorizer.isAuthorized(authSubject, "/users/john/x", Action.WRITE));
-
-
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/x", Action.READ));
-
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/x", Action.WRITE));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/x", Action.WRITE), DecisionType.NOT_APPLICABLE);
 
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/personal/x", Action.READ));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/x", Action.READ), DecisionType.PERMIT);
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/personal/x", Action.WRITE));
-
-
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/shared/photos/summer2012/x", Action.READ));
-
-        assertFalse(
-                authorizer.isAuthorized(authSubject, "/shared/photos/summer2012/x", Action.WRITE));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/x", Action.WRITE), DecisionType.PERMIT);
 
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/shared/music/x", Action.READ));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/personal/x", Action.READ), DecisionType.PERMIT);
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/shared/music/x", Action.WRITE));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/personal/x", Action.WRITE), DecisionType.PERMIT);
 
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/tutorials/x", Action.READ));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/shared/photos/summer2012/x", Action.READ), DecisionType.PERMIT);
 
-        assertTrue(
-                authorizer.isAuthorized(authSubject, "/users/john/docs/tutorials/x", Action.WRITE));
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/shared/photos/summer2012/x", Action.WRITE),
+                DecisionType.NOT_APPLICABLE);
+
+
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/shared/music/x", Action.READ), DecisionType.PERMIT);
+
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/shared/music/x", Action.WRITE), DecisionType.PERMIT);
+
+
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/tutorials/x", Action.READ), DecisionType.PERMIT);
+
+        assertEquals(
+                authorizer.evaluateAccessRequest(authSubject, "/users/john/docs/tutorials/x", Action.WRITE), DecisionType.PERMIT);
 
         log.trace("testUserWithGroupsRules() finished successfully.");
     }
@@ -301,20 +304,20 @@ public class HerasafAuthorizerTest {
         authorizer.redeployPolicy(policy);
 
         // check rules
-        assertFalse(authorizer.isAuthorized(authSubject, "/aaa", Action.READ));
-        assertFalse(authorizer.isAuthorized(authSubject, "/aaa", Action.WRITE));
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/aaa", Action.READ), DecisionType.NOT_APPLICABLE);
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/aaa", Action.WRITE), DecisionType.NOT_APPLICABLE);
 
-        assertTrue(authorizer.isAuthorized(authSubject, "/a/", Action.READ));
-        assertFalse(authorizer.isAuthorized(authSubject, "/a/", Action.WRITE));
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/a/", Action.READ), DecisionType.PERMIT);
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/a/", Action.WRITE), DecisionType.NOT_APPLICABLE);
 
-        assertTrue(authorizer.isAuthorized(authSubject, "/a/x", Action.READ));
-        assertFalse(authorizer.isAuthorized(authSubject, "/a/x", Action.WRITE));
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/a/x", Action.READ), DecisionType.PERMIT);
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/a/x", Action.WRITE), DecisionType.NOT_APPLICABLE);
 
-        assertTrue(authorizer.isAuthorized(authSubject, "/a/b", Action.READ));
-        assertTrue(authorizer.isAuthorized(authSubject, "/a/b", Action.WRITE));
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/a/b", Action.READ), DecisionType.PERMIT);
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/a/b", Action.WRITE), DecisionType.PERMIT);
 
-        assertTrue(authorizer.isAuthorized(authSubject, "/a/b/x", Action.READ));
-        assertTrue(authorizer.isAuthorized(authSubject, "/a/b/x", Action.WRITE));
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/a/b/x", Action.READ), DecisionType.PERMIT);
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/a/b/x", Action.WRITE), DecisionType.PERMIT);
 
         log.trace("testInheritance() finished successfully.");
     }
@@ -354,11 +357,11 @@ public class HerasafAuthorizerTest {
         authorizer.redeployPolicy(policy);
 
         // check rules
-        assertTrue(authorizer.isAuthorized(authSubject, "/a/", Action.READ));
-        assertFalse(authorizer.isAuthorized(authSubject, "/a/", Action.WRITE));
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/a/", Action.READ), DecisionType.PERMIT);
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/a/", Action.WRITE), DecisionType.NOT_APPLICABLE);
 
-        assertFalse(authorizer.isAuthorized(authSubject, "/b/", Action.READ));
-        assertFalse(authorizer.isAuthorized(authSubject, "/b/", Action.WRITE));
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/b/", Action.READ), DecisionType.NOT_APPLICABLE);
+        assertEquals(authorizer.evaluateAccessRequest(authSubject, "/b/", Action.WRITE), DecisionType.NOT_APPLICABLE);
 
         log.trace("testRuleWithDateConstraint() finished successfully.");
     }

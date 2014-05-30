@@ -1,4 +1,4 @@
-package org.consec.authz.herasaf.pdp;
+package org.consec.authz.herasaf.pdp.core;
 
 public final class Consts {
     public static final String SUBJECT_USER_ID_ATTR = "userId";
