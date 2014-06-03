@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.net.URI;
 import java.security.KeyStore;
 import java.security.Security;
+import java.util.List;
 import java.util.Scanner;
 
 public class PDPClient {
@@ -52,26 +53,22 @@ public class PDPClient {
 
         // XACML request subject
         SubjectList subjectList = new SubjectList();
-        String userId = request.getParameter("CONSEC_USER_ID");
+        String userId = (String) request.getAttribute("CONSEC_USER_ID");
         if (userId == null) {
             throw new Exception("The user has not been authenticated.");
         }
         subjectList.addSubject(new Subject(Subject.Type.USER, userId));
 
-        String userRoles = request.getParameter("CONSEC_USER_ROLES");
-        if (userRoles != null) {
-            String[] userRolesArray = userRoles.split(",");
-            for (String roleId : userRolesArray) {
-                subjectList.addSubject(new Subject(Subject.Type.ROLE, roleId));
-            }
+        @SuppressWarnings("unchecked")
+        List<String> userRoles = (List<String>) request.getAttribute("CONSEC_USER_ROLES");
+        for (String roleId : userRoles) {
+            subjectList.addSubject(new Subject(Subject.Type.ROLE, roleId));
         }
 
-        String userGroups = request.getParameter("CONSEC_USER_GROUPS");
-        if (userGroups != null) {
-            String[] userGroupsArray = userGroups.split(",");
-            for (String groupId : userGroupsArray) {
-                subjectList.addSubject(new Subject(Subject.Type.GROUP, groupId));
-            }
+        @SuppressWarnings("unchecked")
+        List<String> userGroups = (List<String>) request.getAttribute("CONSEC_USER_GROUPS");
+        for (String groupId : userGroups) {
+            subjectList.addSubject(new Subject(Subject.Type.GROUP, groupId));
         }
 
         // XACML request resource
