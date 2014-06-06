@@ -136,7 +136,7 @@ public class MyServletContextListener implements ServletContextListener {
             }
             Conf.getInstance().setAppDataRoot(appDataRoot);
 
-            EMF.init("appPU");
+            EMF.init("mainPU");
 
             // initialize OAuth access token manager
             MemoryOAuthATManager oAuthATManager = new MemoryOAuthATManager(
