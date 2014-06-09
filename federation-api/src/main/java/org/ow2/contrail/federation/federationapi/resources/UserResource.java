@@ -42,21 +42,27 @@ public class UserResource {
 
             String baseUri = RestUriBuilder.getUserUri(user);
             JSONObject json = new JSONObject();
+            json.put("userId", user.getUserId());
             json.put("username", user.getUsername());
             json.put("firstName", user.getFirstName());
             json.put("lastName", user.getLastName());
             json.put("email", user.getEmail());
             json.put("password", user.getPassword());
-            json.put("uuid", user.getUserId());
             json.put("attributes", baseUri + "/attributes");
-            json.put("slas", baseUri + "/slas");
-            json.put("slats", baseUri + "/slats");
-            json.put("applications", baseUri + "/applications");
             json.put("ids", baseUri + "/ids");
-            json.put("roles", baseUri + "/roles");
-            json.put("groups", baseUri + "/groups");
-            json.put("ovfs", baseUri + "/ovfs");
-            json.put("providers", baseUri + "/providers");
+            // roles
+            JSONArray rolesArray = new JSONArray();
+            for (Role role : user.getRoleList()) {
+                rolesArray.put(role.getName());
+            }
+            json.put("roles", rolesArray);
+            // groups
+            JSONArray groupsArray = new JSONArray();
+            for (Group group : user.getGroupList()) {
+                groupsArray.put(group.getName());
+            }
+            json.put("groups", groupsArray);
+
             return Response.ok(json.toString()).build();
         }
         finally {
