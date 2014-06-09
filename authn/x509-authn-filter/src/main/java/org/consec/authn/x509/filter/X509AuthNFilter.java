@@ -98,12 +98,22 @@ public class X509AuthNFilter implements Filter {
             }
             JSONObject principalJson = new JSONObject(principalData);
             String userId = principalJson.getString("userId");
+            String username = principalJson.getString("username");
+            String firstName = principalJson.getString("firstName");
+            String lastName = principalJson.getString("lastName");
+            String email = principalJson.getString("email");
             JSONArray userRoles = principalJson.getJSONArray("roles");
             JSONArray userGroups = principalJson.getJSONArray("groups");
 
-            httpRequest.setAttribute("CONSEC_USER_ID", userId);
-            httpRequest.setAttribute("CONSEC_USER_ROLES", convertToList(userRoles));
-            httpRequest.setAttribute("CONSEC_USER_GROUPS", convertToList(userGroups));
+            org.consec.common.authn.Principal principal = new org.consec.common.authn.Principal(userId);
+            principal.setUserName(username);
+            principal.setFirstName(firstName);
+            principal.setLastName(lastName);
+            principal.setEmail(email);
+            principal.setUserRoles(convertToList(userRoles));
+            principal.setUserGroups(convertToList(userGroups));
+
+            httpRequest.setAttribute("CONSEC_PRINCIPAL", principal);
         }
         catch (AuthNException e) {
             httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Authentication failed: " + e.getMessage());

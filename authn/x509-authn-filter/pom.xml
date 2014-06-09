@@ -42,5 +42,10 @@
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-json</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.consec</groupId>
+            <artifactId>consec-common</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>
