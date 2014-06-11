@@ -32,7 +32,7 @@ public class PDPResource {
         DecisionType decision = herasafXACMLEngine.evaluateAccessRequest(subject, resource, action);
 
         JSONObject result = new JSONObject();
-        result.put("decision", decision.value());
+        result.put("decision", decision.name());
         return result;
     }
 }
