@@ -18,13 +18,13 @@ import org.consec.authz.xacml.common.xacmlrequest.Action;
 import org.consec.authz.xacml.common.xacmlrequest.Subject;
 import org.consec.authz.xacml.common.xacmlrequest.SubjectList;
 import org.consec.authz.xacml.common.xacmlrequest.XACMLRequest;
+import org.consec.common.authn.Principal;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.FileInputStream;
 import java.net.URI;
 import java.security.KeyStore;
 import java.security.Security;
-import java.util.List;
 import java.util.Scanner;
 
 public class PDPClient {
@@ -51,23 +51,20 @@ public class PDPClient {
 
     public XACMLDecision evaluate(HttpServletRequest request) throws Exception {
 
+        Principal principal = (Principal) request.getAttribute("CONSEC_PRINCIPAL");
+        if (principal == null) {
+            throw new Exception("No authentication data found.");
+        }
+
         // XACML request subject
         SubjectList subjectList = new SubjectList();
-        String userId = (String) request.getAttribute("CONSEC_USER_ID");
-        if (userId == null) {
-            throw new Exception("The user has not been authenticated.");
-        }
-        subjectList.addSubject(new Subject(Subject.Type.USER, userId));
+        subjectList.addSubject(new Subject(Subject.Type.USER, principal.getUserId()));
 
-        @SuppressWarnings("unchecked")
-        List<String> userRoles = (List<String>) request.getAttribute("CONSEC_USER_ROLES");
-        for (String roleId : userRoles) {
+        for (String roleId : principal.getUserRoles()) {
             subjectList.addSubject(new Subject(Subject.Type.ROLE, roleId));
         }
 
-        @SuppressWarnings("unchecked")
-        List<String> userGroups = (List<String>) request.getAttribute("CONSEC_USER_GROUPS");
-        for (String groupId : userGroups) {
+        for (String groupId : principal.getUserGroups()) {
             subjectList.addSubject(new Subject(Subject.Type.GROUP, groupId));
         }
 
@@ -97,6 +94,7 @@ public class PDPClient {
         HttpPost httpPost = new HttpPost(pdpEndpoint);
         HttpEntity entity = new StringEntity(xacmlRequest.toJson().toString());
         httpPost.setEntity(entity);
+        httpPost.setHeader("Content-Type", "application/json");
         HttpClient httpClient = createHttpClient(pdpEndpoint);
         HttpResponse httpResponse = httpClient.execute(httpPost);
 

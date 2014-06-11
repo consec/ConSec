@@ -84,7 +84,7 @@ public class XACMLAuthzFilter implements Filter {
                     "Please contact the administrator.");
         }
 
-        if (xacmlDecision == XACMLDecision.PERMIT || xacmlDecision == XACMLDecision.NOT_APPLICABLE) {
+        if (xacmlDecision == XACMLDecision.PERMIT) {
             filterChain.doFilter(servletRequest, servletResponse);
         }
         else {
