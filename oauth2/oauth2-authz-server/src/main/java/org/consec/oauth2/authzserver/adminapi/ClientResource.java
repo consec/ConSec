@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Path("/organizations/{orgId}/clients")
 public class ClientResource {
@@ -62,6 +63,7 @@ public class ClientResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response registerClient(JSONObject data) throws Exception {
 
         EntityManager em = PersistenceUtils.getInstance().getEntityManager();
@@ -73,10 +75,8 @@ public class ClientResource {
 
             Client client;
             try {
-                // client_id
-                String clientId = data.getString("client_id");
 
-                // name
+                // client name
                 String name = data.getString("name");
 
                 // callback_uri
@@ -93,9 +93,6 @@ public class ClientResource {
                     agtList.add(agt);
                 }
 
-                // client_secret
-                String clientSecret = data.getString("client_secret");
-
                 // countries
                 JSONArray countriesArr = data.getJSONArray("countries");
                 List<Country> countryList = new ArrayList<Country>();
@@ -103,6 +100,10 @@ public class ClientResource {
                     Country country = em.find(Country.class, countriesArr.getString(i));
                     countryList.add(country);
                 }
+
+                // generate client_id and client_secret
+                String clientId = UUID.randomUUID().toString();
+                String clientSecret = UUID.randomUUID().toString();
 
                 client = new Client();
                 client.setClientId(clientId);
@@ -123,8 +124,12 @@ public class ClientResource {
             em.persist(client);
             em.getTransaction().commit();
 
+            JSONObject result = new JSONObject();
+            result.put("client_id", client.getClientId());
+            result.put("client_secret", client.getClientSecret());
+
             URI location = new URI(client.getId().toString());
-            return Response.created(location).build();
+            return Response.created(location).entity(result.toString()).build();
         }
         finally {
             PersistenceUtils.getInstance().closeEntityManager(em);
