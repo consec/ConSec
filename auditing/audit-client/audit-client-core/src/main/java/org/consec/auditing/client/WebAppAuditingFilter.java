@@ -58,8 +58,6 @@ public class WebAppAuditingFilter implements Filter {
             AuditorFactory.init(props);
             auditor = AuditorFactory.getAuditor();
 
-            String rabbitMQHost = props.getProperty("auditing.rabbitMQHost");
-            int rabbitMQPort = Integer.parseInt(props.getProperty("auditing.rabbitMQPort"));
             auditRequestData = Boolean.valueOf(props.getProperty("auditing.auditRequestData"));
             auditResponseData = Boolean.valueOf(props.getProperty("auditing.auditResponseData"));
             auditRequestDataSizeLimit =
@@ -229,7 +227,6 @@ public class WebAppAuditingFilter implements Filter {
         private ServletOutputStream outputStream;
         private PrintWriter writer;
         private ServletOutputStreamCopier copier;
-        private int httpStatus;
 
         public HttpServletResponseCopier(HttpServletResponse response) throws IOException {
             super(response);
@@ -275,25 +272,12 @@ public class WebAppAuditingFilter implements Filter {
 
         @Override
         public void sendError(int sc) throws IOException {
-            httpStatus = sc;
             super.sendError(sc);
         }
 
         @Override
         public void sendError(int sc, String msg) throws IOException {
-            httpStatus = sc;
             super.sendError(sc, msg);
-        }
-
-
-        @Override
-        public void setStatus(int sc) {
-            httpStatus = sc;
-            super.setStatus(sc);
-        }
-
-        public int getStatus() {
-            return httpStatus;
         }
 
         public byte[] getCopy() {
