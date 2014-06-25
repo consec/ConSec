@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+    <persistence-unit name="defaultPersistenceUnit">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>org.consec.dynamicca.jpa.entities.Ca</class>
+        <class>org.consec.dynamicca.jpa.entities.Cert</class>
+
+        <properties>
+            <property name="eclipselink.cache.shared.default" value="false"/>
+            <property name="eclipselink.target-database" value="MySQL"/>
+            <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/dynamic_ca_server"/>
+            <property name="javax.persistence.jdbc.user" value="consec"/>
+            <property name="javax.persistence.jdbc.password" value="consec"/>
+
+            <!--<property name="eclipselink.ddl-generation" value="create-tables"/>-->
+        </properties>
+    </persistence-unit>
+</persistence>
