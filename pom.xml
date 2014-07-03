@@ -13,7 +13,6 @@
     <module>ca-server</module>
     <module>federation-api</module>
     <module>federation-db</module>
-    <module>federation-web</module>
     <module>oauth2</module>
   </modules>
 </project>
