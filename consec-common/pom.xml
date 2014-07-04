@@ -10,6 +10,13 @@
     <name>consec-common</name>
     <url>http://maven.apache.org</url>
 
+    <parent>
+        <groupId>org.consec</groupId>
+        <artifactId>consec</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../parent-pom</relativePath>
+    </parent>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
