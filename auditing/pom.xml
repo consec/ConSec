@@ -11,7 +11,7 @@
     <module>audit-common</module>
 	<module>audit-client</module>
 	<module>audit-server</module>
-    <module>auditing-api</module>
+    <!--<module>auditing-api</module>-->
 	<module>audit-manager</module>
   </modules>
 </project>
