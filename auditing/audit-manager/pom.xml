@@ -54,8 +54,8 @@
             <version>2.11.1</version>
         </dependency>
         <dependency>
-            <groupId>org.ow2.contrail.resource</groupId>
-            <artifactId>auditing</artifactId>
+            <groupId>org.consec.auditing</groupId>
+            <artifactId>audit-client-core</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -77,7 +77,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <finalName>contrail-${project.artifactId}</finalName>
+                    <finalName>consec-${project.artifactId}</finalName>
                     <descriptors>
                         <descriptor>src/main/assembly/package.xml</descriptor>
                     </descriptors>
