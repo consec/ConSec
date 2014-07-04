@@ -38,8 +38,8 @@
             <version>20090211</version>
         </dependency>
         <dependency>
-            <groupId>org.ow2.contrail.common.oauth</groupId>
-            <artifactId>oauth-java-client</artifactId>
+            <groupId>org.consec.oauth2</groupId>
+            <artifactId>oauth2-java-client</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -54,7 +54,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <finalName>contrail-${project.artifactId}</finalName>
+                    <finalName>consec-${project.artifactId}</finalName>
                     <descriptors>
                         <descriptor>src/main/assembly/package.xml</descriptor>
                     </descriptors>

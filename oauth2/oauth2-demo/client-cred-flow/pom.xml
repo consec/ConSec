@@ -17,8 +17,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.ow2.contrail.common.oauth</groupId>
-            <artifactId>oauth-java-client</artifactId>
+            <groupId>org.consec.oauth2</groupId>
+            <artifactId>oauth2-java-client</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
