@@ -10,6 +10,7 @@
   <modules>
     <module>parent-pom</module>
     <module>auditing</module>
+	<module>dynamic-ca-server</module>
     <module>federation-api</module>
     <module>federation-db</module>
     <module>oauth2</module>
