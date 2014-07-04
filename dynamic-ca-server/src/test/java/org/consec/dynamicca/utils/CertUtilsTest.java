@@ -75,9 +75,10 @@ public class CertUtilsTest {
         X509Certificate cert = (X509Certificate) pemReader.readObject();
         assertEquals(cert.getType(), "X.509");
         assertEquals(cert.getSerialNumber().intValue(), 1);
-        assertEquals(cert.getIssuerDN().getName(), "DC=users,DC=ca,DC=contrail-project,DC=eu");
+        assertEquals(cert.getIssuerDN().getName(),
+                "E=test@consec.org,CN=ConSec Test CA,O=ConSec,L=Ljubljana,ST=Slovenia,C=SI");
         assertEquals(cert.getPublicKey().getAlgorithm(), "RSA");
-        assertEquals(cert.getSigAlgName(), "SHA1WithRSAEncryption");
+        assertEquals(cert.getSigAlgName(), "SHA512WithRSAEncryption");
 
         String subjectDN = Conf.getInstance().getCACertDNTemplate()
                 .replace("{UUID}", ca1.getUid());

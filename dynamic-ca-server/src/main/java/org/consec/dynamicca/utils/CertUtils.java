@@ -61,7 +61,7 @@ public class CertUtils {
         String subjectDN = Conf.getInstance().getCACertDNTemplate()
                 .replace("{UUID}", ca.getUid());
 
-        JcaContentSignerBuilder contetnSignerBuilder = new JcaContentSignerBuilder("SHA1withRSA")
+        JcaContentSignerBuilder contetnSignerBuilder = new JcaContentSignerBuilder("SHA512withRSA")
                 .setProvider(BouncyCastleProvider.PROVIDER_NAME);
         ContentSigner contentSigner = contetnSignerBuilder.build(issuerPrivateKey);
 
@@ -180,7 +180,7 @@ public class CertUtils {
         return keyPair.getPrivate();
     }
 
-    public PrivateKey readPrivateKey(File filePath, final String password) throws IOException {
+    public PrivateKey readPrivateKey(File filePath, final String password) throws Exception {
         // read CA private key
         PEMReader pemReader = null;
         if (password != null) {
@@ -195,8 +195,17 @@ public class CertUtils {
         else {
             pemReader = new PEMReader(new FileReader(filePath));
         }
-        KeyPair keyPair = (KeyPair) pemReader.readObject();
-        return keyPair.getPrivate();
+
+        Object o = pemReader.readObject();
+        if (o instanceof PrivateKey) {
+            return (PrivateKey) o;
+        }
+        else if (o instanceof KeyPair) {
+            return ((KeyPair) o).getPrivate();
+        }
+        else {
+            throw new Exception("Invalid PEM object: " + o.getClass());
+        }
     }
 
     public X509CRLHolder createCRL(Ca ca) throws Exception {
@@ -236,7 +245,8 @@ public class CertUtils {
         }
 
         // sign with CA private key
-        ContentSigner contentSigner = new JcaContentSignerBuilder("SHA1withRSA").setProvider("BC").build(caPrivateKey);
+        ContentSigner contentSigner = new JcaContentSignerBuilder("SHA512withRSA").setProvider("BC")
+                .build(caPrivateKey);
         X509CRLHolder crlHolder = crlGen.build(contentSigner);
 
         return crlHolder;
