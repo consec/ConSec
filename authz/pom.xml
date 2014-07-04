@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.consec</groupId>
+  <groupId>org.consec.authz</groupId>
   <artifactId>builder</artifactId>
   <version>0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>ConSec builder</name>
+  <name>ConSec AuthZ Builder</name>
 
   <modules>
-    <module>parent-pom</module>
-    <module>auditing</module>
-	<module>authn</module>
-	<module>authz</module>
-	<module>consec-common</module>
-	<module>dynamic-ca-server</module>
-    <module>federation-api</module>
-    <module>federation-db</module>
-    <module>oauth2</module>
+    <module>herasaf-xacml-pdp</module>
+	<module>xacml-authz-common</module>
+	<module>xacml-authz-filter</module>
   </modules>
 </project>
