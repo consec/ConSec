@@ -7,7 +7,7 @@
     <version>0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>federation-api</name>
-    <description>Servlet that exposes the Contrail federation API in tomcat</description>
+    <description>Servlet that exposes the federation API in tomcat</description>
     <parent>
         <groupId>org.consec</groupId>
         <artifactId>consec</artifactId>
@@ -20,7 +20,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <finalName>contrail-${project.artifactId}</finalName>
+                    <finalName>consec-${project.artifactId}</finalName>
                     <descriptors>
                         <descriptor>src/main/assembly/package.xml</descriptor>
                     </descriptors>
@@ -60,18 +60,6 @@
         </plugins>
     </build>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-            <version>2.5.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>2.5.6</version>
-            <scope>test</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.consec</groupId>
             <artifactId>federation-db</artifactId>
@@ -152,36 +140,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.ow2.contrail.provider</groupId>
-            <artifactId>cnr-pep-java</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ow2.contrail.federation</groupId>
-            <artifactId>herasaf-authorizer-core</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>  <!-- needed by herasaf-authorizer -->
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>  <!-- needed by herasaf-authorizer -->
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>  <!-- needed by herasaf-authorizer -->
-            <groupId>org.herasaf.xacml.core</groupId>
-            <artifactId>herasaf-xacml-core</artifactId>
-            <version>1.0.0-M2</version>
-        </dependency>
-        <dependency>  <!-- needed by herasaf-authorizer -->
-            <groupId>org.ow2.contrail.federation</groupId>
-            <artifactId>mongodb-policyrepo</artifactId>
-            <version>0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>0.3m</version>
@@ -192,28 +150,28 @@
             <version>1.9</version>
         </dependency>
         <dependency>
-            <groupId>org.ow2.contrail.common.oauth</groupId>
-            <artifactId>oauth-java-client</artifactId>
+            <groupId>org.opensaml</groupId>
+            <artifactId>opensaml</artifactId>
+            <version>2.5.1-1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.consec.oauth2</groupId>
+            <artifactId>oauth2-java-client</artifactId>
             <version>0.1-SNAPSHOT</version>
         </dependency>
-        <dependency> <!-- needed by oauth-java-client -->
+        <dependency> <!-- needed by oauth2-java-client -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
             <version>4.2.1</version>
         </dependency>
         <dependency>
-            <groupId>org.ow2.contrail.resource</groupId>
-            <artifactId>auditing</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+            <version>1.4.01</version>
         </dependency>
     </dependencies>
 
     <repositories>
-        <repository>
-            <id>maven.herasaf.org-releases</id>
-            <name>maven.herasaf.org-releases</name>
-            <url>http://unicore-dev.zam.kfa-juelich.de/maven/</url>
-        </repository>
         <repository>
             <id>springsource-repo</id>
             <name>SpringSource Repository</name>

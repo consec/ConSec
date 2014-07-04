@@ -1,20 +1,14 @@
 package org.ow2.contrail.federation.federationapi.utils;
 
 import org.consec.federationdb.model.*;
-import org.ow2.contrail.federation.herasafauthorizer.Rule;
 
 public class RestUriBuilder {
-    private static String authRuleUriFormat = "/auth/rules/%s";
     private static String idpUriFormat = "/idps/%s";
     private static String userUriFormat = "/users/%s";
     private static String attributeUriFormat = "/attributes/%s";
     private static String userAttrUriFormat = "/users/%s/attributes/%d";
     private static String roleUriFormat = "/roles/%d";
     private static String groupUriFormat = "/groups/%d";
-
-    public static String getAuthRuleUri(Rule rule) {
-        return String.format(authRuleUriFormat, rule.getRuleId());
-    }
 
     public static String getIdpUri(IdentityProvider idp) {
         return String.format(idpUriFormat, idp.getIdpId());
