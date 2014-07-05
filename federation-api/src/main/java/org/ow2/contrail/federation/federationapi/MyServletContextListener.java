@@ -10,9 +10,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -25,13 +22,6 @@ public class MyServletContextListener implements ServletContextListener {
      * These are servlet properties from configuration file
      */
     protected static Properties servletProperties = new Properties();
-
-    public static String INIT_PARAM_AUTHZ_ENABLED = "authz-enabled";
-    public static String INIT_PARAM_AUTHZ_ENGINE = "authz-engine";
-    public static String INIT_PARAM_AUTHZ_XACML_PDP_URL = "SoapXACMLAuthorizer-pdp-url";
-    public static String INIT_PARAM_FEDER_CORE_CLASS = "federation-core-class";
-    public static String INIT_PARAM_FEDERATION_ID_PROV_ENABLED = "Federation-id-prov.enabled";
-    public static String INIT_PARAM_FEDERATION_ID_PROV_URI = "Federation-id-prov.uri";
 
     /**
      * List of CNs which are authorized to access the API.
@@ -61,45 +51,6 @@ public class MyServletContextListener implements ServletContextListener {
     protected static String federationIdentityProviderURI = null;
 
     /**
-     * Reads configuration file and tries to setup the values.
-     *
-     * @param propertyFile
-     * @throws Exception
-     */
-    protected static void setup(File propertyFile) throws Exception {
-        logger.debug("Entering setup");
-        try {
-            FileInputStream fis = new FileInputStream(propertyFile);
-            servletProperties.load(fis);
-            fis.close();
-            logger.debug(servletProperties);
-            try {
-                authZEnabled = Boolean.parseBoolean(servletProperties.getProperty(INIT_PARAM_AUTHZ_ENABLED));
-                logger.debug("AuthZenabled:" + authZEnabled);
-                federCoreClass = servletProperties.getProperty(INIT_PARAM_FEDER_CORE_CLASS);
-                logger.debug("federCoreClass : " + federCoreClass);
-                fedIdProvEnabled = Boolean.parseBoolean(servletProperties.getProperty(INIT_PARAM_FEDERATION_ID_PROV_ENABLED));
-                logger.debug("fedIdProvEnabled:" + fedIdProvEnabled);
-                federationIdentityProviderURI = servletProperties.getProperty(INIT_PARAM_FEDERATION_ID_PROV_URI);
-                logger.debug("federationIdentityProviderURI:" + federationIdentityProviderURI);
-            }
-            catch (Exception err) {
-                logger.error(err.getMessage());
-            }
-        }
-        catch (FileNotFoundException e) {
-            logger.error("Property file not found.");
-            logger.error(e.getMessage());
-            throw e;
-        }
-        catch (IOException e) {
-            logger.error(e.getMessage());
-            throw e;
-        }
-        logger.debug("Exiting setup");
-    }
-
-    /**
      * This method is invoked when the Web Application is ready to service requests
      */
     public void contextInitialized(ServletContextEvent event) {
@@ -117,24 +68,8 @@ public class MyServletContextListener implements ServletContextListener {
                 throw new Exception("Failed to open configuration file " + confFile);
             }
 
-            logger.debug("Reading configuration file " + configFilePath);
-            try {
-                setup(confFile);
-                logger.debug("Conf file was read successfully.");
-            }
-            catch (Exception e) {
-                throw new Exception(String.format("Failed to load configuration file %s: %s",
-                        configFilePath, e.getMessage()));
-            }
-
             // load configuration file
             Conf.getInstance().load(confFile);
-
-            String appDataRoot = context.getInitParameter("app-data-root");
-            if (appDataRoot == null) {
-                throw new Exception("Missing parameter 'app-data-root' in web.xml file.");
-            }
-            Conf.getInstance().setAppDataRoot(appDataRoot);
 
             EMF.init("mainPU");
 

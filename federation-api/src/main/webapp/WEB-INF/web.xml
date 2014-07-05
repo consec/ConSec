@@ -11,11 +11,7 @@
     </listener>
     <context-param>
         <param-name>properties-file</param-name>
-        <param-value>/etc/contrail/federation-api/federation-api.cfg</param-value>
-    </context-param>
-    <context-param>
-        <param-name>app-data-root</param-name>
-        <param-value>/etc/contrail/federation-api</param-value>
+        <param-value>/etc/consec/federation-api/federation-api.properties</param-value>
     </context-param>
 
     <servlet>
@@ -27,7 +23,7 @@
         </init-param>
         <init-param>
             <param-name>properties-file</param-name>
-            <param-value>/etc/contrail/federation-api/federation-api.conf</param-value>
+            <param-value>/etc/consec/federation-api/federation-api.properties</param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>

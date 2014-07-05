@@ -49,14 +49,6 @@ public class Conf {
         return NegotiationEngine.valueOf(props.getProperty("sla.negotiation.engine"));
     }
 
-    public String getAppDataRoot() {
-        return appDataRoot;
-    }
-
-    public void setAppDataRoot(String appDataRoot) {
-        this.appDataRoot = appDataRoot;
-    }
-
     public String getOAuthClientId() {
         return props.getProperty("oauthClient.id");
     }
