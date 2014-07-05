@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "group")
+@Table(name = "\"group\"")
 @NamedQueries({
         @NamedQuery(name = "Group.findAll", query = "SELECT g FROM Group g")})
 public class Group implements Serializable {
