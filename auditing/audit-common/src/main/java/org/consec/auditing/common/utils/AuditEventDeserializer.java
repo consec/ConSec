@@ -1,7 +1,7 @@
 package org.consec.auditing.common.utils;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.consec.auditing.common.AuditMessage;
+import org.consec.auditing.common.auditevent.AuditEvent;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -15,10 +15,9 @@ public class AuditEventDeserializer {
         this.objectMapper = createObjectMapper();
     }
 
-    public AuditMessage deserialize(String json) throws IOException {
-        // TODO: use auditEventClass from audit message at deserialization
-        AuditMessage auditMessage = objectMapper.readValue(json, AuditMessage.class);
-        return auditMessage;
+    public AuditEvent deserialize(String json) throws IOException {
+        AuditEvent auditEvent = objectMapper.readValue(json, AuditEvent.class);
+        return auditEvent;
     }
 
     private ObjectMapper createObjectMapper() {

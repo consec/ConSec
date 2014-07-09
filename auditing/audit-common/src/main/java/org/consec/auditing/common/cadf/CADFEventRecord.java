@@ -1,12 +1,10 @@
 package org.consec.auditing.common.cadf;
 
-import org.consec.auditing.common.AuditEvent;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class CADFEventRecord implements AuditEvent {
+public class CADFEventRecord {
     private String typeURI = "http://schemas.dmtf.org/cloud/audit/1.0/event";
     private String id;
     private EventType eventType;
