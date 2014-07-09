@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.consec.auditing.dal</groupId>
+    <artifactId>audit-dal</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>ConSec Audit DAL</name>
+
+    <parent>
+        <groupId>org.consec</groupId>
+        <artifactId>consec</artifactId>
+        <version>0.1-SNAPSHOT</version>
+        <relativePath>../../../parent-pom</relativePath>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.consec.auditing</groupId>
+            <artifactId>audit-common</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>
