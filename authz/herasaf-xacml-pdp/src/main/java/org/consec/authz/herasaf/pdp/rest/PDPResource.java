@@ -6,12 +6,10 @@ import org.consec.authz.herasaf.pdp.core.HerasafXACMLEngine;
 import org.herasaf.xacml.core.context.impl.DecisionType;
 
 import javax.servlet.ServletContext;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/pdp")
 public class PDPResource {
@@ -24,9 +22,18 @@ public class PDPResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("evaluate")
     public JSONObject evaluateAccessRequest(JSONObject json) throws Exception {
-        AuthSubject subject = AuthSubject.fromJson(json.getJSONArray("subject"));
-        String resource = json.getString("resource");
-        String action = json.getString("action");
+        AuthSubject subject = null;
+        String resource = null;
+        String action = null;
+        try {
+            subject = AuthSubject.fromJson(json.getJSONArray("subject"));
+            resource = json.getString("resource");
+            action = json.getString("action");
+        }
+        catch (Exception e) {
+            throw new WebApplicationException(Response.status(
+                    Response.Status.BAD_REQUEST).entity(e.getMessage()).build());
+        }
 
         HerasafXACMLEngine herasafXACMLEngine = (HerasafXACMLEngine) context.getAttribute("herasafXACMLEngine");
         DecisionType decision = herasafXACMLEngine.evaluateAccessRequest(subject, resource, action);
