@@ -19,10 +19,10 @@ public class AuditEventDAOImpl implements AuditEventDAO {
         auditEventJpa.setAction(auditEvent.getAction());
         auditEventJpa.setEventTime(auditEvent.getEventTime());
         auditEventJpa.setEventType(auditEvent.getEventType());
-        auditEventJpa.setInitiatorType(auditEvent.getInitiatorType());
-        auditEventJpa.setInitiatorId(auditEvent.getInitiatorId());
-        auditEventJpa.setTargetType(auditEvent.getTargetType());
-        auditEventJpa.setTargetId(auditEvent.getTargetId());
+        auditEventJpa.setInitiatorType(auditEvent.getInitiator().getType());
+        auditEventJpa.setInitiatorId(auditEvent.getInitiator().getId());
+        auditEventJpa.setTargetType(auditEvent.getTarget().getType());
+        auditEventJpa.setTargetId(auditEvent.getTarget().getId());
         auditEventJpa.setSeverity(auditEvent.getSeverity().name());
         auditEventJpa.setOutcome(auditEvent.getOutcome().name());
 
