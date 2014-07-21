@@ -6,7 +6,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import org.apache.log4j.Logger;
 import org.consec.auditing.client.Auditor;
 import org.consec.auditing.client.amqp.utils.Conf;
-import org.consec.auditing.common.AuditEvent;
+import org.consec.auditing.common.auditevent.AuditEvent;
 import org.consec.auditing.common.utils.AuditEventSerializer;
 
 import java.io.IOException;
@@ -89,7 +89,7 @@ public class AmqpAuditor implements Auditor {
                         String content = auditEventSerializer.serialize(auditEvent);
                         channel.basicPublish(exchangeName, "", null, content.getBytes());
                         if (log.isDebugEnabled()) {
-                            log.debug(String.format("Audit event %s has been published.", auditEvent.getId()));
+                            log.debug("Audit event has been published.");
                         }
                     }
                     catch (Exception e) {
