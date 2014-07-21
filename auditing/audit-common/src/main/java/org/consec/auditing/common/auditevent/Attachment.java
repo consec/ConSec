@@ -1,9 +1,9 @@
 package org.consec.auditing.common.auditevent;
 
 public class Attachment {
-    private String name;
-    private String contentType;
-    private Object content;
+    protected String name;
+    protected String contentType;
+    protected Object content;
 
     public Attachment() {
     }

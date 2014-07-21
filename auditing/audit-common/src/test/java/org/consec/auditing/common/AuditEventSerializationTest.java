@@ -1,7 +1,6 @@
 package org.consec.auditing.common;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jettison.json.JSONObject;
 import org.consec.auditing.common.auditevent.*;
 import org.consec.auditing.common.utils.AuditEventDeserializer;
 import org.consec.auditing.common.utils.AuditEventSerializer;
@@ -30,18 +29,15 @@ public class AuditEventSerializationTest {
         auditEvent.setSeverity(Severity.INFO);
         auditEvent.setOutcome(Outcome.SUCCESS);
 
-        JSONObject httpRequestJson = new JSONObject();
-        httpRequestJson.put("method", "GET");
-        httpRequestJson.put("uri", "https://consec-server1/federation-api/users/523aebaa-cf04-4bd4-b067-dcf17e74ff50");
-        Attachment httpRequestAttach = new Attachment("httpRequestData", "application/json", httpRequestJson.toString());
+        JsonAttachment httpRequestAttach = new JsonAttachment("httpRequestData");
+        httpRequestAttach.put("method", "GET");
+        httpRequestAttach.put("uri", "https://consec-server1/federation-api/users/523aebaa-cf04-4bd4-b067-dcf17e74ff50");
         auditEvent.addAttachment(httpRequestAttach);
 
-        JSONObject httpResponseJson = new JSONObject();
-        httpResponseJson.put("statusCode", 200);
-        httpResponseJson.put("contentType", "application/json");
-        httpResponseJson.put("content", "{'userId':'523aebaa-cf04-4bd4-b067-dcf17e74ff50', 'username':'test_user'}");
-        Attachment httpResponseAttach = new Attachment("httpResponseData", "application/json",
-                httpResponseJson.toString());
+        JsonAttachment httpResponseAttach = new JsonAttachment("httpResponseData");
+        httpResponseAttach.put("statusCode", 200);
+        httpResponseAttach.put("contentType", "application/json");
+        httpResponseAttach.put("content", "{'userId':'523aebaa-cf04-4bd4-b067-dcf17e74ff50', 'username':'test_user'}");
         auditEvent.addAttachment(httpResponseAttach);
 
         AuditEventSerializer serializer = new AuditEventSerializer();
@@ -57,6 +53,6 @@ public class AuditEventSerializationTest {
         Attachment httpResponseAttach1 = auditEvent1.getAttachments().get("httpResponseData");
         assertEquals(httpResponseAttach1.getName(), httpResponseAttach.getName());
         assertEquals(httpResponseAttach1.getContentType(), httpResponseAttach.getContentType());
-        assertEquals(httpResponseAttach1.getContent(), httpResponseJson.toString());
+        assertEquals(httpResponseAttach1.getContent(), httpResponseAttach.getContent().toString());
     }
 }
