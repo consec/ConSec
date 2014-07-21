@@ -6,8 +6,7 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 import org.apache.log4j.Logger;
 import org.consec.auditing.auditserver.rabbitmq.utils.Conf;
-import org.consec.auditing.common.AuditEvent;
-import org.consec.auditing.common.AuditMessage;
+import org.consec.auditing.common.auditevent.AuditEvent;
 import org.consec.auditing.common.utils.AuditEventDeserializer;
 
 public class AuditMessageConsumer implements Runnable {
@@ -89,8 +88,7 @@ public class AuditMessageConsumer implements Runnable {
                         log.trace(String.format("New message arrived with routing key '%s':\n%s", routingKey, message));
                     }
 
-                    AuditMessage auditMessage = auditEventDeserializer.deserialize(message);
-                    auditEvent = auditMessage.getAuditEvent();
+                    AuditEvent auditMessage = auditEventDeserializer.deserialize(message);
                 }
                 catch (Exception e) {
                     log.error(String.format("Invalid message received: %s\nRouting key: %s\nMessage: %s",
