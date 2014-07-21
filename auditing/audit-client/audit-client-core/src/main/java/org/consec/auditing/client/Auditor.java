@@ -1,6 +1,6 @@
 package org.consec.auditing.client;
 
-import org.consec.auditing.common.AuditEvent;
+import org.consec.auditing.common.auditevent.AuditEvent;
 
 public interface Auditor {
 

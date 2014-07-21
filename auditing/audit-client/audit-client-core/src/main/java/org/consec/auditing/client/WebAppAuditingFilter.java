@@ -1,14 +1,9 @@
 package org.consec.auditing.client;
 
 import org.apache.log4j.Logger;
-import org.consec.auditing.common.AuditEvent;
-import org.consec.auditing.common.cadf.CADFEventRecord;
-import org.consec.auditing.common.cadf.EventType;
-import org.consec.auditing.common.cadf.Outcome;
-import org.consec.auditing.common.cadf.Resource;
-import org.consec.auditing.common.cadf.ext.HttpRequestData;
-import org.consec.auditing.common.cadf.ext.HttpResponseData;
-import org.consec.auditing.common.cadf.ext.Initiator;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.consec.auditing.common.auditevent.*;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +15,6 @@ import java.net.InetAddress;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Properties;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -82,40 +76,49 @@ public class WebAppAuditingFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
 
         BufferedRequestWrapper bufferedRequest = null;
+        HttpServletResponseCopier responseCopier = null;
         if (auditRequestData) {
             bufferedRequest = new BufferedRequestWrapper(httpRequest);
         }
-
-        HttpServletResponseCopier responseCopier = new HttpServletResponseCopier(httpResponse);
+        if (auditResponseData) {
+            responseCopier = new HttpServletResponseCopier(httpResponse);
+        }
 
         try {
             filterChain.doFilter(
-                    (bufferedRequest != null) ? bufferedRequest : httpRequest,
-                    responseCopier);
-            responseCopier.flushBuffer();
+                    auditRequestData ? bufferedRequest : httpRequest,
+                    auditResponseData ? responseCopier : httpResponse);
+            if (responseCopier != null) {
+                responseCopier.flushBuffer();
+            }
         }
         finally {
-            log.debug("Auditing HTTP request...");
-            String requestContent = null;
-            if (bufferedRequest != null) {
-                requestContent = new String(bufferedRequest.getBuffer());
-                if (auditRequestDataSizeLimit > 0 &&
-                        requestContent.length() > auditRequestDataSizeLimit) {
-                    requestContent = requestContent.substring(0, auditRequestDataSizeLimit) + "...";
+            try {
+                log.debug("Auditing HTTP request...");
+                String requestContent = null;
+                if (bufferedRequest != null) {
+                    requestContent = new String(bufferedRequest.getBuffer());
+                    if (auditRequestDataSizeLimit > 0 &&
+                            requestContent.length() > auditRequestDataSizeLimit) {
+                        requestContent = requestContent.substring(0, auditRequestDataSizeLimit) + "...";
+                    }
                 }
-            }
-            String responseContent = null;
-            if (auditResponseData) {
-                byte[] copy = responseCopier.getCopy();
-                responseContent = new String(copy, httpResponse.getCharacterEncoding());
-                if (auditResponseDataSizeLimit > 0 &&
-                        responseContent.length() > auditResponseDataSizeLimit) {
-                    responseContent = responseContent.substring(0, auditResponseDataSizeLimit) + "...";
+                String responseContent = null;
+                if (responseCopier != null) {
+                    byte[] copy = responseCopier.getCopy();
+                    responseContent = new String(copy, httpResponse.getCharacterEncoding());
+                    if (auditResponseDataSizeLimit > 0 &&
+                            responseContent.length() > auditResponseDataSizeLimit) {
+                        responseContent = responseContent.substring(0, auditResponseDataSizeLimit) + "...";
+                    }
                 }
-            }
 
-            AuditEvent auditEvent = createAuditEvent(httpRequest, responseCopier, requestContent, responseContent);
-            auditor.audit(auditEvent);
+                AuditEvent auditEvent = createAuditEvent(httpRequest, responseCopier, requestContent, responseContent);
+                auditor.audit(auditEvent);
+            }
+            catch (Exception e) {
+                log.error("Failed to audit HTTP request: " + e.getMessage(), e);
+            }
         }
     }
 
@@ -131,11 +134,10 @@ public class WebAppAuditingFilter implements Filter {
         log.info("WebAppAuditingFilter destroyed successfully.");
     }
 
-    private AuditEvent createAuditEvent(HttpServletRequest httpRequest, HttpServletResponseCopier httpResponse,
-                                        String requestContent, String responseContent) {
-        CADFEventRecord event = new CADFEventRecord();
-        event.setId(UUID.randomUUID().toString());
-        event.setEventType(EventType.ACTIVITY);
+    private AuditEvent createAuditEvent(HttpServletRequest httpRequest, HttpServletResponse httpResponse,
+                                        String requestContent, String responseContent) throws JSONException {
+        AuditEvent event = new AuditEvent();
+        event.setEventType("API_CALL");
         event.setEventTime(new Date());
 
         // action
@@ -199,25 +201,31 @@ public class WebAppAuditingFilter implements Filter {
         event.setInitiator(initiator);
 
         // target
-        Resource target = new Resource();
+        Target target = new Target();
         target.setId(localID);
-        target.setDomain(localHostName);
+        target.setHost(localHostName);
         event.setTarget(target);
 
         // HTTP request data
-        HttpRequestData httpRequestData = new HttpRequestData();
-        httpRequestData.setMethod(httpRequest.getMethod());
-        httpRequestData.setContentType(httpRequest.getContentType());
-        httpRequestData.setUrl(httpRequest.getRequestURL().toString());
-        httpRequestData.setContent(requestContent);
-        event.addAttachment(httpRequestData.toAttachment());
+        JSONObject httpRequestData = new JSONObject();
+        httpRequestData.put("method", httpRequest.getMethod());
+        httpRequestData.put("contentType", httpRequest.getContentType());
+        httpRequestData.put("url", httpRequest.getRequestURL().toString());
+        if (requestContent != null) {
+            httpRequestData.put("content", requestContent);
+        }
+        Attachment httpRequestAtt = new Attachment("httpRequestData", "application/json", httpRequestData.toString());
+        event.addAttachment(httpRequestAtt);
 
         // HTTP response data
-        HttpResponseData httpResponseData = new HttpResponseData();
-        httpResponseData.setStatusCode(httpResponse.getStatus());
-        httpResponseData.setContentType(httpResponse.getContentType());
-        httpResponseData.setContent(responseContent);
-        event.addAttachment(httpResponseData.toAttachment());
+        JSONObject httpResponseData = new JSONObject();
+        httpResponseData.put("statusCode", httpResponse.getStatus());
+        httpResponseData.put("contentType", httpResponse.getContentType());
+        if (responseContent != null) {
+            httpResponseData.put("content", responseContent);
+        }
+        Attachment httpResponseAtt = new Attachment("httpResponseData", "application/json", httpResponseData.toString());
+        event.addAttachment(httpResponseAtt);
 
         return event;
     }
