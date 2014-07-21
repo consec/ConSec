@@ -12,16 +12,11 @@ public class AuditEvent {
     private String eventType;
 
     /**
-     * The ID of resource that initiated, originated or instigated the event action. Typically,
+     * The resource that initiated, originated or instigated the event action. Typically,
      * the initiating resource is either a 653 user or service that can be identified or described by the system in
      * which the event occurs.
      */
-    private String initiatorId;
-
-    /**
-     * The type of the initiator resource identified by the {@link AuditEvent#initiatorId}
-     */
-    private String initiatorType;
+    private Initiator initiator;
 
     /**
      * The action (verb) performed by the event initiator against the event target resource
@@ -34,14 +29,9 @@ public class AuditEvent {
     private Date eventTime;
 
     /**
-     * The ID of the resource against which the action was performed.
+     * The resource against which the action was performed.
      */
-    private String targetId;
-
-    /**
-     * The type of the target resource identified by the {@link AuditEvent#targetId}
-     */
-    private String targetType;
+    private Target target;
 
     /**
      * The result or status of the action of the observed event.
@@ -67,20 +57,12 @@ public class AuditEvent {
         this.eventType = eventType;
     }
 
-    public String getInitiatorId() {
-        return initiatorId;
+    public Initiator getInitiator() {
+        return initiator;
     }
 
-    public void setInitiatorId(String initiatorId) {
-        this.initiatorId = initiatorId;
-    }
-
-    public String getInitiatorType() {
-        return initiatorType;
-    }
-
-    public void setInitiatorType(String initiatorType) {
-        this.initiatorType = initiatorType;
+    public void setInitiator(Initiator initiator) {
+        this.initiator = initiator;
     }
 
     public String getAction() {
@@ -99,20 +81,12 @@ public class AuditEvent {
         this.eventTime = eventTime;
     }
 
-    public String getTargetId() {
-        return targetId;
+    public Target getTarget() {
+        return target;
     }
 
-    public void setTargetId(String targetId) {
-        this.targetId = targetId;
-    }
-
-    public String getTargetType() {
-        return targetType;
-    }
-
-    public void setTargetType(String targetType) {
-        this.targetType = targetType;
+    public void setTarget(Target target) {
+        this.target = target;
     }
 
     public Outcome getOutcome() {
@@ -139,10 +113,10 @@ public class AuditEvent {
         return attachments.get(attachmentName);
     }
 
-    public void addAttachment(String attachmentName, Attachment attachment) {
+    public void addAttachment(Attachment attachment) {
         if (attachments == null) {
             attachments = new HashMap<String, Attachment>();
         }
-        attachments.put(attachmentName, attachment);
+        attachments.put(attachment.getName(), attachment);
     }
 }
