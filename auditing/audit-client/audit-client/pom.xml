@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.consec.auditing</groupId>
-    <artifactId>audit-client-core</artifactId>
+    <artifactId>audit-client</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>ConSec Audit Client Core</name>
+    <name>ConSec Audit Client</name>
 
     <parent>
         <groupId>org.consec</groupId>
