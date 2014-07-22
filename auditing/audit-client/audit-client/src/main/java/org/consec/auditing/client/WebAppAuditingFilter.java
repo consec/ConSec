@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.*;
 import java.net.InetAddress;
 import java.security.cert.X509Certificate;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +25,7 @@ public class WebAppAuditingFilter implements Filter {
     private boolean auditResponseData;
     private int auditRequestDataSizeLimit;
     private int auditResponseDataSizeLimit;
+    private List<String> responseMimeTypesToAudit;
     private String localID;
     private String localHostName;
 
@@ -58,6 +58,15 @@ public class WebAppAuditingFilter implements Filter {
                     Integer.parseInt(props.getProperty("auditing.auditRequestData.sizeLimit"));
             auditResponseDataSizeLimit =
                     Integer.parseInt(props.getProperty("auditing.auditResponseData.sizeLimit"));
+
+            // which MIME types of response content to audit
+            String responseMimeTypes = props.getProperty("auditing.auditResponseData.mimeTypes");
+            responseMimeTypesToAudit = new ArrayList<String>();
+            if (responseMimeTypes != null && !responseMimeTypes.equals("")) {
+                String[] responseMimeTypesArr = responseMimeTypes.split(",");
+                Collections.addAll(responseMimeTypesToAudit, responseMimeTypesArr);
+            }
+
             localID = props.getProperty("auditing.localID");
             localHostName = InetAddress.getLocalHost().getCanonicalHostName();
 
@@ -104,7 +113,8 @@ public class WebAppAuditingFilter implements Filter {
                     }
                 }
                 String responseContent = null;
-                if (responseCopier != null) {
+                if (responseCopier != null &&
+                        responseMimeTypesToAudit.contains(httpResponse.getContentType())) {
                     byte[] copy = responseCopier.getCopy();
                     responseContent = new String(copy, httpResponse.getCharacterEncoding());
                     if (auditResponseDataSizeLimit > 0 &&
@@ -113,7 +123,7 @@ public class WebAppAuditingFilter implements Filter {
                     }
                 }
 
-                AuditEvent auditEvent = createAuditEvent(httpRequest, responseCopier, requestContent, responseContent);
+                AuditEvent auditEvent = createAuditEvent(httpRequest, httpResponse, requestContent, responseContent);
                 auditor.audit(auditEvent);
             }
             catch (Exception e) {
