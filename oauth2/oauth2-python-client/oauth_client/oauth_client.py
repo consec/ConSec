@@ -186,9 +186,12 @@ def application(environ, start_response):
                                )
             access_token=str(json.loads(resp._content).get('access_token'))
             logger.debug('Got access_token: %s' % access_token)
-            cert=get_cert(access_token)
-            response_body=str(cert)
-            logger.debug(str(cert))
+            response_body = 'Got access_token: %s' % access_token
+            # Uncomment if you want to use it with ca
+
+            # cert=get_cert(access_token)
+            # response_body=str(cert)
+            # logger.debug(str(cert))
         
     response_headers = [('Content-Type', 'text/html'),
                         ('Content-Length', str(len(response_body)))]
